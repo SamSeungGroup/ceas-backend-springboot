@@ -37,7 +37,7 @@ public class UserController {
 			UserEntity userEntity = UserEntity.builder()
 					.userName(userDTO.getUserName())
 					.userId(userDTO.getUserId())
-					.password(userDTO.getPassword())
+					.password(passwordEncoder.encode(userDTO.getPassword()))
 					.email(userDTO.getEmail())
 					.build();
 			UserEntity registeredUser = userService.create(userEntity);
