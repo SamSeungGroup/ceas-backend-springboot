@@ -32,10 +32,10 @@ public class UserEntity {
 	@Column(nullable = false)
 	private String userId;
 	
-	private String password;
+	private String userPassword;
 	
 	@Column(nullable = false)
-	private String email;
+	private String userEmail;
 	
 	@Column
 	private String authProvider;
