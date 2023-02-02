@@ -31,14 +31,14 @@ public class UserController {
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO){
 		try {
-			if(userDTO == null || userDTO.getPassword() == null) {
+			if(userDTO == null || userDTO.getUserPassword() == null) {
 				throw new RuntimeException("Invalid Password value");
 			}
 			UserEntity userEntity = UserEntity.builder()
 					.userName(userDTO.getUserName())
 					.userId(userDTO.getUserId())
-					.password(passwordEncoder.encode(userDTO.getPassword()))
-					.email(userDTO.getEmail())
+					.userPassword(passwordEncoder.encode(userDTO.getUserPassword()))
+					.userEmail(userDTO.getUserEmail())
 					.build();
 			UserEntity registeredUser = userService.create(userEntity);
 			UserDTO responseUserDTO = UserDTO.builder()
@@ -54,7 +54,7 @@ public class UserController {
 	
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticate(@RequestBody UserDTO userDTO){
-		UserEntity user = userService.getByCredentials(userDTO.getUserId(), userDTO.getPassword(), passwordEncoder);
+		UserEntity user = userService.getByCredentials(userDTO.getUserId(), userDTO.getUserPassword(), passwordEncoder);
 		if(user != null) {
 			final String token = tokenProvider.create(user);
 			final UserDTO reponseUserDTO = UserDTO.builder()
