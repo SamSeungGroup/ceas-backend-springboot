@@ -35,7 +35,7 @@ public class Product {
 	private Double productPositive;
 
 	@OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
-	List<Comment> commentList;
+	private List<Comment> commentList;
 
 	@ManyToOne
 	@JoinColumn(name = "user")

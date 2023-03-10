@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.samseung.ceas.dto.ImageDTO;
-import com.samseung.ceas.dto.ResponseDTO;
+import com.samseung.ceas.dto.ResponseDtos;
 import com.samseung.ceas.model.Image;
 import com.samseung.ceas.service.ImageService;
 
@@ -52,13 +51,13 @@ public class ImageController {
 			List<ImageDTO> dtos = new ArrayList<>();
 			dtos.add(new ImageDTO(image));
         				
-			ResponseDTO<ImageDTO> response = ResponseDTO.<ImageDTO>builder().data(dtos).build();
+			ResponseDtos<ImageDTO> response = ResponseDtos.<ImageDTO>builder().data(dtos).build();
 			return ResponseEntity.ok().body(response);			
 		}catch (NoSuchElementException e) {
-			ResponseDTO<ImageDTO> response = ResponseDTO.<ImageDTO>builder().error("Entity is not existed").build();
+			ResponseDtos<ImageDTO> response = ResponseDtos.<ImageDTO>builder().error("Entity is not existed").build();
 			return ResponseEntity.badRequest().body(response);
 		}catch (Exception e) {
-			ResponseDTO<ImageDTO> response = ResponseDTO.<ImageDTO>builder().error("An unexpected error occurred").build();
+			ResponseDtos<ImageDTO> response = ResponseDtos.<ImageDTO>builder().error("An unexpected error occurred").build();
 			return ResponseEntity.badRequest().body(response);
 		}
     }

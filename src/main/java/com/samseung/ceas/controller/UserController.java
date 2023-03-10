@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.samseung.ceas.dto.ResponseDTO;
+import com.samseung.ceas.dto.ResponseDtos;
 import com.samseung.ceas.dto.UserDTO;
 import com.samseung.ceas.model.User;
 import com.samseung.ceas.security.TokenProvider;
@@ -45,8 +45,8 @@ public class UserController {
 					.build();
 			return ResponseEntity.ok().body(responseUserDTO);
 		}catch (Exception e) {
-			ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
-			return ResponseEntity.badRequest().body(responseDTO);
+			ResponseDtos responseDtos = ResponseDtos.builder().error(e.getMessage()).build();
+			return ResponseEntity.badRequest().body(responseDtos);
 		}
 	}
 	
@@ -62,8 +62,8 @@ public class UserController {
 					.build();
 			return ResponseEntity.ok().body(reponseUserDTO);
 		}else {
-			ResponseDTO responseDTO = ResponseDTO.builder().error("Login failed").build();
-			return ResponseEntity.badRequest().body(responseDTO);
+			ResponseDtos responseDtos = ResponseDtos.builder().error("Login failed").build();
+			return ResponseEntity.badRequest().body(responseDtos);
 		}
 	}
 }

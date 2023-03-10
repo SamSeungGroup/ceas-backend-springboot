@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.samseung.ceas.dto.CommentsDTO;
-import com.samseung.ceas.dto.ResponseDTO;
+import com.samseung.ceas.dto.CommentDTO;
+import com.samseung.ceas.dto.ResponseDtos;
 import com.samseung.ceas.model.Comment;
 import com.samseung.ceas.service.CommentsService;
 
@@ -42,25 +42,25 @@ public class CommentsController {
 		try {
 			
 			List<Comment> entities = commentsService.retrieveAll(id);
-			List<CommentsDTO> dtos = entities.stream().map(CommentsDTO::new).collect(Collectors.toList());
+			List<CommentDTO> dtos = entities.stream().map(CommentDTO::new).collect(Collectors.toList());
 			
-			ResponseDTO<CommentsDTO> response = ResponseDTO.<CommentsDTO>builder().data(dtos).build();
+			ResponseDtos<CommentDTO> response = ResponseDtos.<CommentDTO>builder().data(dtos).build();
 			return ResponseEntity.ok().body(response);			
 		}catch (IllegalStateException e) {
-			ResponseDTO<CommentsDTO> responseDTO = ResponseDTO.<CommentsDTO>builder().error("Product Table is empty").build();
-			return ResponseEntity.badRequest().body(responseDTO);
+			ResponseDtos<CommentDTO> responseDtos = ResponseDtos.<CommentDTO>builder().error("Product Table is empty").build();
+			return ResponseEntity.badRequest().body(responseDtos);
 		}catch (Exception e) {
-			ResponseDTO<CommentsDTO> response = ResponseDTO.<CommentsDTO>builder().error("An unexpected error occurred").build();
+			ResponseDtos<CommentDTO> response = ResponseDtos.<CommentDTO>builder().error("An unexpected error occurred").build();
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
 	
     @PostMapping("/{id}/comments")
-    public ResponseEntity<?> createComments (@AuthenticationPrincipal String userId, @PathVariable("id") Integer id, @RequestBody CommentsDTO dto) {
+    public ResponseEntity<?> createComments (@AuthenticationPrincipal String userId, @PathVariable("id") Integer id, @RequestBody CommentDTO dto) {
         
         try {
         	
-        	Comment entity = CommentsDTO.toEntity(dto);
+        	Comment entity = CommentDTO.toEntity(dto);
         	
 //        	UserEntity userEntity = userRepository.findByUserId(userId).orElseThrow(RuntimeException::new);
 //        	String name = userEntity.getUserName();
@@ -74,35 +74,35 @@ public class CommentsController {
             log.info("entity: " + entity.toString());
 			
             Comment createdComments = commentsService.create(entity);
-			List<CommentsDTO> dtos = new ArrayList<>();
-			dtos.add(new CommentsDTO(createdComments));
+			List<CommentDTO> dtos = new ArrayList<>();
+			dtos.add(new CommentDTO(createdComments));
 			
-			ResponseDTO<CommentsDTO> response = ResponseDTO.<CommentsDTO>builder().data(dtos).build();
+			ResponseDtos<CommentDTO> response = ResponseDtos.<CommentDTO>builder().data(dtos).build();
 			return ResponseEntity.ok().body(response);
 		}catch (Exception e) {
-			ResponseDTO<CommentsDTO> response = ResponseDTO.<CommentsDTO>builder().error("An unexpected error occurred").build();
+			ResponseDtos<CommentDTO> response = ResponseDtos.<CommentDTO>builder().error("An unexpected error occurred").build();
 			return ResponseEntity.badRequest().body(response);
 		}
     }
     
 	@PutMapping("/{id}/comments/{c_id}")
-	public ResponseEntity<?> updateComments(@AuthenticationPrincipal String userId, @PathVariable("id") Integer id, @PathVariable("c_id") Integer c_id, @RequestBody CommentsDTO dto){
+	public ResponseEntity<?> updateComments(@AuthenticationPrincipal String userId, @PathVariable("id") Integer id, @PathVariable("c_id") Integer c_id, @RequestBody CommentDTO dto){
 		try {
 			
 			Comment originalEntity = commentsService.retrieve(c_id);
 			originalEntity.setContent(dto.getContent());
 			
 			Comment updatedEntity = commentsService.update(originalEntity);
-			List<CommentsDTO> dtos = new ArrayList<>();
-			dtos.add(new CommentsDTO(updatedEntity));
+			List<CommentDTO> dtos = new ArrayList<>();
+			dtos.add(new CommentDTO(updatedEntity));
 			
-			ResponseDTO<CommentsDTO> response = ResponseDTO.<CommentsDTO>builder().data(dtos).build();
+			ResponseDtos<CommentDTO> response = ResponseDtos.<CommentDTO>builder().data(dtos).build();
 			return ResponseEntity.ok().body(response);			
 		}catch (NoSuchElementException e) {
-			ResponseDTO<CommentsDTO> response = ResponseDTO.<CommentsDTO>builder().error("Entity is not existed").build();
+			ResponseDtos<CommentDTO> response = ResponseDtos.<CommentDTO>builder().error("Entity is not existed").build();
 			return ResponseEntity.badRequest().body(response);
 		}catch (Exception e) {
-			ResponseDTO<CommentsDTO> response = ResponseDTO.<CommentsDTO>builder().error("An unexpected error occurred").build();
+			ResponseDtos<CommentDTO> response = ResponseDtos.<CommentDTO>builder().error("An unexpected error occurred").build();
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
@@ -114,11 +114,11 @@ public class CommentsController {
 			commentsService.delete(entity);
 			
 			List<Comment> entities =  commentsService.retrieveAll(id);
-			List<CommentsDTO> dtos = entities.stream().map(CommentsDTO::new).collect(Collectors.toList());
-			ResponseDTO<CommentsDTO> response = ResponseDTO.<CommentsDTO>builder().data(dtos).build();
+			List<CommentDTO> dtos = entities.stream().map(CommentDTO::new).collect(Collectors.toList());
+			ResponseDtos<CommentDTO> response = ResponseDtos.<CommentDTO>builder().data(dtos).build();
 			return ResponseEntity.ok().body(response);
 		}catch (Exception e) {
-			ResponseDTO<CommentsDTO> response = ResponseDTO.<CommentsDTO>builder().error("An error occurred while deleting a Comments").build();
+			ResponseDtos<CommentDTO> response = ResponseDtos.<CommentDTO>builder().error("An error occurred while deleting a Comments").build();
 			return ResponseEntity.badRequest().body(response);
 		}
 	}

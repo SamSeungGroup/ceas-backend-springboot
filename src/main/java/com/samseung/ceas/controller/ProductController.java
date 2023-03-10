@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.samseung.ceas.dto.ProductDTO;
-import com.samseung.ceas.dto.ResponseDTO;
+import com.samseung.ceas.dto.ResponseDtos;
 import com.samseung.ceas.model.Product;
 import com.samseung.ceas.service.ProductService;
 
@@ -36,13 +36,13 @@ public class ProductController {
 		try {
 			List<Product> entities = productService.retrieveAll();
 			List<ProductDTO> dtos = entities.stream().map(ProductDTO::new).collect(Collectors.toList());
-			ResponseDTO<ProductDTO> response = ResponseDTO.<ProductDTO>builder().data(dtos).build();
+			ResponseDtos<ProductDTO> response = ResponseDtos.<ProductDTO>builder().data(dtos).build();
 			return ResponseEntity.ok().body(response);			
 		}catch (IllegalStateException e) {
-			ResponseDTO<ProductDTO> responseDTO = ResponseDTO.<ProductDTO>builder().error("Product Table is empty").build();
-			return ResponseEntity.badRequest().body(responseDTO);
+			ResponseDtos<ProductDTO> responseDtos = ResponseDtos.<ProductDTO>builder().error("Product Table is empty").build();
+			return ResponseEntity.badRequest().body(responseDtos);
 		}catch (Exception e) {
-			ResponseDTO<ProductDTO> response = ResponseDTO.<ProductDTO>builder().error("An unexpected error occurred").build();
+			ResponseDtos<ProductDTO> response = ResponseDtos.<ProductDTO>builder().error("An unexpected error occurred").build();
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
@@ -59,10 +59,10 @@ public class ProductController {
 			List<ProductDTO> dtos = new ArrayList<>();
 			dtos.add(new ProductDTO(createdProduct));
 			
-			ResponseDTO<ProductDTO> response = ResponseDTO.<ProductDTO>builder().data(dtos).build();
+			ResponseDtos<ProductDTO> response = ResponseDtos.<ProductDTO>builder().data(dtos).build();
 			return ResponseEntity.ok().body(response);
 		}catch (Exception e) {
-			ResponseDTO<ProductDTO> response = ResponseDTO.<ProductDTO>builder().error("An unexpected error occurred").build();
+			ResponseDtos<ProductDTO> response = ResponseDtos.<ProductDTO>builder().error("An unexpected error occurred").build();
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
@@ -74,13 +74,13 @@ public class ProductController {
 			List<ProductDTO> dtos = new ArrayList<>();
 			dtos.add(new ProductDTO(entity));
 			
-			ResponseDTO<ProductDTO> response = ResponseDTO.<ProductDTO>builder().data(dtos).build();
+			ResponseDtos<ProductDTO> response = ResponseDtos.<ProductDTO>builder().data(dtos).build();
 			return ResponseEntity.ok().body(response);			
 		}catch (NoSuchElementException e) {
-			ResponseDTO<ProductDTO> response = ResponseDTO.<ProductDTO>builder().error("Entity is not existed").build();
+			ResponseDtos<ProductDTO> response = ResponseDtos.<ProductDTO>builder().error("Entity is not existed").build();
 			return ResponseEntity.badRequest().body(response);
 		}catch (Exception e) {
-			ResponseDTO<ProductDTO> response = ResponseDTO.<ProductDTO>builder().error("An unexpected error occurred").build();
+			ResponseDtos<ProductDTO> response = ResponseDtos.<ProductDTO>builder().error("An unexpected error occurred").build();
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
@@ -96,13 +96,13 @@ public class ProductController {
 			List<ProductDTO> dtos = new ArrayList<>();
 			dtos.add(new ProductDTO(updatedEntity));
 			
-			ResponseDTO<ProductDTO> response = ResponseDTO.<ProductDTO>builder().data(dtos).build();
+			ResponseDtos<ProductDTO> response = ResponseDtos.<ProductDTO>builder().data(dtos).build();
 			return ResponseEntity.ok().body(response);			
 		}catch (NoSuchElementException e) {
-			ResponseDTO<ProductDTO> response = ResponseDTO.<ProductDTO>builder().error("Entity is not existed").build();
+			ResponseDtos<ProductDTO> response = ResponseDtos.<ProductDTO>builder().error("Entity is not existed").build();
 			return ResponseEntity.badRequest().body(response);
 		}catch (Exception e) {
-			ResponseDTO<ProductDTO> response = ResponseDTO.<ProductDTO>builder().error("An unexpected error occurred").build();
+			ResponseDtos<ProductDTO> response = ResponseDtos.<ProductDTO>builder().error("An unexpected error occurred").build();
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
@@ -115,10 +115,10 @@ public class ProductController {
 			
 			List<Product> entities =  productService.retrieveAll();
 			List<ProductDTO> dtos = entities.stream().map(ProductDTO::new).collect(Collectors.toList());
-			ResponseDTO<ProductDTO> response = ResponseDTO.<ProductDTO>builder().data(dtos).build();
+			ResponseDtos<ProductDTO> response = ResponseDtos.<ProductDTO>builder().data(dtos).build();
 			return ResponseEntity.ok().body(response);
 		}catch (Exception e) {
-			ResponseDTO<ProductDTO> response = ResponseDTO.<ProductDTO>builder().error("An error occurred while deleting a product").build();
+			ResponseDtos<ProductDTO> response = ResponseDtos.<ProductDTO>builder().error("An error occurred while deleting a product").build();
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
