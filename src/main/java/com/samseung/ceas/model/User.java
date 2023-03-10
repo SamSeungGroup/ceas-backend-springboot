@@ -13,16 +13,13 @@ import lombok.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-
-
 @Data
 @Entity
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(name = "User", uniqueConstraints = {@UniqueConstraint(columnNames = "username")})
-public class UserEntity {
+public class User {
 	@Id
 	@GeneratedValue(generator="system-uuid")
 	@GenericGenerator(name="system-uuid", strategy = "uuid")
@@ -33,13 +30,13 @@ public class UserEntity {
 	
 	@Column(nullable = false)
 	private String userId;
-	
+
+	@Column(nullable = false)
 	private String userPassword;
 	
 	@Column(nullable = false)
 	private String userEmail;
-	
+
 	@Column
-	private String authProvider;
-	
+	private String userImage;
 }

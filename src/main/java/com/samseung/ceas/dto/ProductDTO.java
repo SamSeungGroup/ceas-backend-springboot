@@ -3,7 +3,7 @@ package com.samseung.ceas.dto;
 
 import java.time.LocalDateTime;
 
-import com.samseung.ceas.model.ProductEntity;
+import com.samseung.ceas.model.Product;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +21,7 @@ public class ProductDTO {
 	private String userId;
 	private LocalDateTime createdDate;
 	
-	public ProductDTO(final ProductEntity entity) {
+	public ProductDTO(final Product entity) {
 		this.id = entity.getId();
 		this.productName = entity.getProductName();
 		this.productDescription = entity.getProductDescription();
@@ -29,8 +29,8 @@ public class ProductDTO {
 		this.createdDate = entity.getCreatedDate();
 	}
 	
-	public static ProductEntity toEntity(final ProductDTO dto) {
-		return ProductEntity.builder()
+	public static Product toEntity(final ProductDTO dto) {
+		return Product.builder()
 				.id(dto.getId())
 				.productName(dto.getProductName())
 				.productDescription(dto.getProductDescription())

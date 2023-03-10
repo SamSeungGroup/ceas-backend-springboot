@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.samseung.ceas.dto.ResponseDTO;
 import com.samseung.ceas.dto.UserDTO;
-import com.samseung.ceas.model.UserEntity;
+import com.samseung.ceas.model.User;
 import com.samseung.ceas.security.TokenProvider;
 import com.samseung.ceas.service.UserService;
 
@@ -32,13 +32,13 @@ public class UserController {
 			if(userDTO == null || userDTO.getUserPassword() == null) {
 				throw new RuntimeException("Invalid Password value");
 			}
-			UserEntity userEntity = UserEntity.builder()
+			User user = User.builder()
 					.userName(userDTO.getUserName())
 					.userId(userDTO.getUserId())
 					.userPassword(passwordEncoder.encode(userDTO.getUserPassword()))
 					.userEmail(userDTO.getUserEmail())
 					.build();
-			UserEntity registeredUser = userService.create(userEntity);
+			User registeredUser = userService.create(user);
 			UserDTO responseUserDTO = UserDTO.builder()
 					.id(registeredUser.getId())
 					.userId(registeredUser.getUserId())
@@ -52,7 +52,7 @@ public class UserController {
 	
 	@PostMapping("/login")
 	public ResponseEntity<?> authenticate(@RequestBody UserDTO userDTO){
-		UserEntity user = userService.getByCredentials(userDTO.getUserId(), userDTO.getUserPassword(), passwordEncoder);
+		User user = userService.getByCredentials(userDTO.getUserId(), userDTO.getUserPassword(), passwordEncoder);
 		if(user != null) {
 			final String token = tokenProvider.create(user);
 			final UserDTO reponseUserDTO = UserDTO.builder()

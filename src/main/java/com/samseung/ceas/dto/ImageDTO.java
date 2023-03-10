@@ -1,6 +1,6 @@
 package com.samseung.ceas.dto;
 
-import com.samseung.ceas.model.ImageEntity;
+import com.samseung.ceas.model.Image;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,13 +18,13 @@ import lombok.NoArgsConstructor;
 		
 
 		
-		public ImageDTO(final ImageEntity entity) {
+		public ImageDTO(final Image entity) {
 			this.id = entity.getId();
 			this.storedFileName = entity.getStoredFileName();
 		}
 		
-		public static ImageEntity toEntity(final ImageDTO dto) {
-			return ImageEntity.builder()
+		public static Image toEntity(final ImageDTO dto) {
+			return Image.builder()
 					.id(dto.getId())
 					.storedFileName(dto.getStoredFileName())
 					.build();

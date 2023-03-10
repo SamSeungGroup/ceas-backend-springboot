@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.samseung.ceas.model.UserEntity;
+import com.samseung.ceas.model.User;
 import com.samseung.ceas.repository.UserRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -15,21 +15,21 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 	
-	public UserEntity create(final UserEntity userEntity) {
-		if(userEntity == null || userEntity.getUserId() == null) {
+	public User create(final User user) {
+		if(user == null || user.getUserId() == null) {
 			throw new RuntimeException("Invalid arguments");
 		}
 		
-		final String userId = userEntity.getUserId();
+		final String userId = user.getUserId();
 		if(userRepository.existsByUserId(userId)) {
 			log.warn("UserId already exists {}", userId);
 			throw new RuntimeException("UserId already exists");
 		}
-		return userRepository.save(userEntity);
+		return userRepository.save(user);
 	}
 	
-	public UserEntity getByCredentials(final String userId, final String password, final PasswordEncoder encoder) {
-		final UserEntity originalUser = userRepository.findByUserId(userId);
+	public User getByCredentials(final String userId, final String password, final PasswordEncoder encoder) {
+		final User originalUser = userRepository.findByUserId(userId);
 		if(originalUser != null && encoder.matches(password, originalUser.getUserPassword())) {
 			return originalUser;
 		}
@@ -37,7 +37,7 @@ public class UserService {
 		return null;
 	}
 	
-	public UserEntity getByUserId(final String userId) {
+	public User getByUserId(final String userId) {
         return userRepository.findByUserId(userId);
     }
 	

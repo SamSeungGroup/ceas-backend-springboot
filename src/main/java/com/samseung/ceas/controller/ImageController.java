@@ -1,32 +1,23 @@
 package com.samseung.ceas.controller;
 
 import java.net.MalformedURLException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.samseung.ceas.dto.CommentsDTO;
 import com.samseung.ceas.dto.ImageDTO;
-import com.samseung.ceas.dto.ProductDTO;
 import com.samseung.ceas.dto.ResponseDTO;
-import com.samseung.ceas.model.CommentsEntity;
-import com.samseung.ceas.model.ImageEntity;
-import com.samseung.ceas.model.ProductEntity;
+import com.samseung.ceas.model.Image;
 import com.samseung.ceas.service.ImageService;
 
 import lombok.RequiredArgsConstructor;
@@ -39,7 +30,7 @@ public class ImageController {
 
     @PostMapping("/image")
     public ResponseEntity<?> createImage(@AuthenticationPrincipal String userId, @Validated @RequestParam("image") List<MultipartFile> files) throws Exception {
-    	imageService.addImage(ImageEntity.builder()
+    	imageService.addImage(Image.builder()
                 .build(), files);
     	
     	
@@ -51,7 +42,7 @@ public class ImageController {
         
         try {
         	
-        	ImageEntity imageEntity = imageService.findImage(id).get();
+        	Image image = imageService.findImage(id).get();
         	
            	
 //        	ImageDTO imageDTO = new ImageDTO();
@@ -59,7 +50,7 @@ public class ImageController {
 //        	imageDTO.setStoredFileName(imageEntity.getStoredFileName());
         	
 			List<ImageDTO> dtos = new ArrayList<>();
-			dtos.add(new ImageDTO(imageEntity));
+			dtos.add(new ImageDTO(image));
         				
 			ResponseDTO<ImageDTO> response = ResponseDTO.<ImageDTO>builder().data(dtos).build();
 			return ResponseEntity.ok().body(response);			

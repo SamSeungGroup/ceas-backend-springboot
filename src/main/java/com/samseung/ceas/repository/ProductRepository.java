@@ -8,14 +8,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.samseung.ceas.model.ProductEntity;
+import com.samseung.ceas.model.Product;
 
 @Repository
-public interface ProductRepository extends JpaRepository<ProductEntity, Integer>{
+public interface ProductRepository extends JpaRepository<Product, Integer>{
 	
-	Optional<ProductEntity> findById(Integer productId);
+	Optional<Product> findById(Integer productId);
 	
-	Page<ProductEntity> findAll(Pageable pageable);
+	Page<Product> findAll(Pageable pageable);
 	
 	
 }

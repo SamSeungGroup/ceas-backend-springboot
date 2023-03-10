@@ -2,15 +2,9 @@ package com.samseung.ceas.model;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,27 +22,27 @@ import lombok.ToString;
 @Getter
 @Entity
 
-@Table(name = "Comments")
-
-public class CommentsEntity {
+public class Comment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer c_id;
+	private Integer commentId;
 	
-	@Column
+	@Column(nullable = false)
 	private String content;
+
+	@Column(nullable = false)
+	private Double commentPositive;
 	
 	@Column(name = "created_date")
 	@CreatedDate
 	private LocalDateTime createdDate;
-	
-	
-	@Column(nullable = false)
-	private Integer productId;
-	
-	@Column
-	private String author;
-	
 
+	@ManyToOne
+	@JoinColumn(name="product")
+	private Product product;
+
+	@ManyToOne
+	@JoinColumn(name="user")
+	private User writer;
 }
 

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.samseung.ceas.dto.ProductDTO;
-import com.samseung.ceas.model.ProductEntity;
+import com.samseung.ceas.model.Product;
 import com.samseung.ceas.repository.ProductRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class PageController {
     @GetMapping("/page")
     public Page<ProductDTO> paging(@AuthenticationPrincipal String userId, Model model, @PageableDefault(size=10, sort="createdDate") Pageable pageRequest) {
  
-        Page<ProductEntity> productList = productRepository.findAll(pageRequest);
+        Page<Product> productList = productRepository.findAll(pageRequest);
 
         Page<ProductDTO> pagingList = productList.map(
                 post -> new ProductDTO(post.getId(),post.getProductName(), post.getProductDescription(), post.getUserId(), post.getCreatedDate()));

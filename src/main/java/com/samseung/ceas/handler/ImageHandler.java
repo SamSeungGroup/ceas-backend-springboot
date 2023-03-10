@@ -10,18 +10,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.samseung.ceas.model.ImageEntity;
+import com.samseung.ceas.model.Image;
 
 @Component
 public class ImageHandler {
 
-    public List<ImageEntity> parseFileInfo(
+    public List<Image> parseFileInfo(
             Long imageID,
             List<MultipartFile> multipartFiles
     ) throws Exception {
 
         // 반환을 할 파일 리스트
-        List<ImageEntity> imageList = new ArrayList<>();
+        List<Image> imageList = new ArrayList<>();
 
         // 파일이 빈 것이 들어오면 빈 것을 반환
         if (multipartFiles.isEmpty()) {
@@ -75,12 +75,12 @@ public class ImageHandler {
                 // 각 이름은 겹치면 안되므로 나노 초까지 동원하여 지정
                 String new_image_name = System.nanoTime() + originalFileExtension;
                 // 생성 후 리스트에 추가
-                ImageEntity imageEntity = ImageEntity.builder()
+                Image image = Image.builder()
                         .originalFileName(multipartFile.getOriginalFilename())
                         .storedFileName(path + "/" + new_image_name)
                         .fileSize(multipartFile.getSize())
                         .build();
-                imageList.add(imageEntity);
+                imageList.add(image);
 
                 // 저장된 파일로 변경하여 이를 보여주기 위함
                 file = new File(absolutePath + path + "/" + new_image_name);

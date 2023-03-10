@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.samseung.ceas.model.ProductEntity;
+import com.samseung.ceas.model.Product;
 import com.samseung.ceas.repository.ProductRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +18,8 @@ public class ProductService {
 	@Autowired
 	private ProductRepository productRepository;
 
-	public List<ProductEntity> retrieveAll() {
-		List<ProductEntity> list = productRepository.findAll();
+	public List<Product> retrieveAll() {
+		List<Product> list = productRepository.findAll();
 		if (list != null) {
 			return productRepository.findAll();
 		} else {
@@ -29,32 +29,32 @@ public class ProductService {
 
 	}
 
-	public ProductEntity create(ProductEntity productEntity) {
+	public Product create(Product product) {
 		try {
-			validate(productEntity);
-			productRepository.save(productEntity);
-			log.info("product Id: {} is saved", productEntity.getId());
-			ProductEntity savedEntity = productRepository.findById(productEntity.getId()).get();
+			validate(product);
+			productRepository.save(product);
+			log.info("product Id: {} is saved", product.getId());
+			Product savedEntity = productRepository.findById(product.getId()).get();
 			return savedEntity;
 		} catch (Exception e) {
-			log.error("An error occurred while creating a product", productEntity.getId(), e);
+			log.error("An error occurred while creating a product", product.getId(), e);
 			throw new RuntimeException("An error occurred while creating a product", e);
 		}
 	}
 
-	private void validate(final ProductEntity productEntity) {
-		if (productEntity == null) {
+	private void validate(final Product product) {
+		if (product == null) {
 			log.warn("Entity cannot be null");
 			throw new IllegalStateException("Entity cannot be null.");
 		}
-		if (productEntity.getUserId() == null) {
+		if (product.getUserId() == null) {
 			log.warn("Unknown user");
 			throw new IllegalStateException("Unknown user.");
 		}
 	}
 
-	public ProductEntity retrieve(final Integer productId) {
-		final Optional<ProductEntity> entity = productRepository.findById(productId);
+	public Product retrieve(final Integer productId) {
+		final Optional<Product> entity = productRepository.findById(productId);
 		return entity.orElseThrow(() -> {
 			log.info("Entity is not existed");
 			throw new NoSuchElementException("Entity is not existed");
@@ -62,27 +62,27 @@ public class ProductService {
 
 	}
 
-	public ProductEntity update(final ProductEntity productEntity) {
-		validate(productEntity);
-		final Optional<ProductEntity> originalEntity = productRepository.findById(productEntity.getId());
+	public Product update(final Product product) {
+		validate(product);
+		final Optional<Product> originalEntity = productRepository.findById(product.getId());
 		originalEntity.ifPresentOrElse((entity) -> {
-			entity.setProductName(productEntity.getProductName());
-			entity.setProductDescription(productEntity.getProductDescription());
+			entity.setProductName(product.getProductName());
+			entity.setProductDescription(product.getProductDescription());
 			productRepository.save(entity);
 		}, () -> {
 			log.warn("Entity is not existed");
 			throw new NoSuchElementException("Entity is not existed");
 		});
-		return retrieve(productEntity.getId());
+		return retrieve(product.getId());
 
 	}
 
-	public List<ProductEntity> delete(final ProductEntity productEntity) {
+	public List<Product> delete(final Product product) {
 		try {
-			productRepository.delete(productEntity);
+			productRepository.delete(product);
 		} catch (Exception e) {
-			log.error("An error occurred while deleting a product", productEntity.getId(), e);
-			throw new RuntimeException("An error occurred while deleting a product" + productEntity.getId(), e);
+			log.error("An error occurred while deleting a product", product.getId(), e);
+			throw new RuntimeException("An error occurred while deleting a product" + product.getId(), e);
 		}
 		return productRepository.findAll();
 	}

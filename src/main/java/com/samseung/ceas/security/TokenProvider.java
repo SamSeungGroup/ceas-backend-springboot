@@ -6,7 +6,7 @@ import java.util.Date;
 
 import org.springframework.stereotype.Service;
 
-import com.samseung.ceas.model.UserEntity;
+import com.samseung.ceas.model.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -16,14 +16,14 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class TokenProvider {
 	private static final String SECRET_KEY = "VsgJ2sdfF34sdNfd4Vdfy5OdfgDsa73Sadf1Y29dE3asBdbsSe";
 	
-	public String create(UserEntity userEntity) {
+	public String create(User user) {
 		Date expiryDate = Date.from(
 				Instant.now()
 				.plus(1, ChronoUnit.DAYS));
 		
 		return Jwts.builder()
 				.signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-				.setSubject(userEntity.getId())
+				.setSubject(user.getId())
 				.setIssuer("ceas")
 				.setIssuedAt(new Date())
 				.setExpiration(expiryDate)

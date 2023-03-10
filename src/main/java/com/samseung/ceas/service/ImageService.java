@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.samseung.ceas.handler.ImageHandler;
-import com.samseung.ceas.model.ImageEntity;
+import com.samseung.ceas.model.Image;
 import com.samseung.ceas.repository.ImageRepository;
 
 @Service
@@ -22,23 +22,23 @@ public class ImageService {
 		this.imageHandler = new ImageHandler();
 	}
 
-	public void addImage(ImageEntity imageEntity, List<MultipartFile> files) throws Exception {
+	public void addImage(Image image, List<MultipartFile> files) throws Exception {
 		// 파일을 저장하고 그 Board 에 대한 list 를 가지고 있는다
-		List<ImageEntity> list = imageHandler.parseFileInfo(imageEntity.getId(), files);
+		List<Image> list = imageHandler.parseFileInfo(image.getId(), files);
 
 		// 파일에 대해 DB에 저장하고 가지고 있을 것
 
-		for (ImageEntity imageEntitys : list) {
+		for (Image imageEntitys : list) {
 			imageRepository.save(imageEntitys);
 		}
 
 	}
 
-	public List<ImageEntity> findImages() {
+	public List<Image> findImages() {
 		return imageRepository.findAll();
 	}
 
-	public Optional<ImageEntity> findImage(long id) {
+	public Optional<Image> findImage(long id) {
 		return imageRepository.findById(id);
 	}
 

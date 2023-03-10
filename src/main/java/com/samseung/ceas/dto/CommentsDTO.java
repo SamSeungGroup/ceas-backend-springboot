@@ -2,7 +2,7 @@ package com.samseung.ceas.dto;
 
 import java.time.LocalDateTime;
 
-import com.samseung.ceas.model.CommentsEntity;
+import com.samseung.ceas.model.Comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 		
 
 		
-		public CommentsDTO(final CommentsEntity entity) {
+		public CommentsDTO(final Comment entity) {
 			this.c_id = entity.getC_id();
 			this.author = entity.getAuthor();
 			this.productId = entity.getProductId();
@@ -31,8 +31,8 @@ import lombok.NoArgsConstructor;
 			this.createdDate = entity.getCreatedDate();
 		}
 		
-		public static CommentsEntity toEntity(final CommentsDTO dto) {
-			return CommentsEntity.builder()
+		public static Comment toEntity(final CommentsDTO dto) {
+			return Comment.builder()
 					.c_id(dto.getC_id())
 					.author(dto.getAuthor())
 					.productId(dto.getProductId())

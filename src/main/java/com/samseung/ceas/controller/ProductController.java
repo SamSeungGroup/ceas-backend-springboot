@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.samseung.ceas.dto.ProductDTO;
 import com.samseung.ceas.dto.ResponseDTO;
-import com.samseung.ceas.model.ProductEntity;
+import com.samseung.ceas.model.Product;
 import com.samseung.ceas.service.ProductService;
 
 @RestController
@@ -34,7 +34,7 @@ public class ProductController {
 	public ResponseEntity<?> retrieveProductList(){
 		
 		try {
-			List<ProductEntity> entities = productService.retrieveAll();
+			List<Product> entities = productService.retrieveAll();
 			List<ProductDTO> dtos = entities.stream().map(ProductDTO::new).collect(Collectors.toList());
 			ResponseDTO<ProductDTO> response = ResponseDTO.<ProductDTO>builder().data(dtos).build();
 			return ResponseEntity.ok().body(response);			
@@ -50,12 +50,12 @@ public class ProductController {
 	@PostMapping
 	public ResponseEntity<?> createProduct(@AuthenticationPrincipal String userId, @RequestBody ProductDTO dto){
 		try{
-			ProductEntity entity = ProductDTO.toEntity(dto);
+			Product entity = ProductDTO.toEntity(dto);
 			entity.setId(null);
 			entity.setUserId(userId);
 			entity.setCreatedDate(LocalDateTime.now());
 			
-			ProductEntity createdProduct = productService.create(entity);
+			Product createdProduct = productService.create(entity);
 			List<ProductDTO> dtos = new ArrayList<>();
 			dtos.add(new ProductDTO(createdProduct));
 			
@@ -70,7 +70,7 @@ public class ProductController {
 	@GetMapping("/{id}")
 	public ResponseEntity<?> retrieveProduct(@PathVariable("id") Integer id){
 		try {
-			ProductEntity entity = productService.retrieve(id);
+			Product entity = productService.retrieve(id);
 			List<ProductDTO> dtos = new ArrayList<>();
 			dtos.add(new ProductDTO(entity));
 			
@@ -88,11 +88,11 @@ public class ProductController {
 	@PutMapping("/{id}")
 	public ResponseEntity<?> updateProduct(@AuthenticationPrincipal String userId, @RequestBody ProductDTO dto, @PathVariable("id") Integer id){
 		try {
-			ProductEntity originalEntity = productService.retrieve(id);
+			Product originalEntity = productService.retrieve(id);
 			originalEntity.setProductName(dto.getProductName());
 			originalEntity.setProductDescription(dto.getProductDescription());
 			
-			ProductEntity updatedEntity = productService.update(originalEntity);
+			Product updatedEntity = productService.update(originalEntity);
 			List<ProductDTO> dtos = new ArrayList<>();
 			dtos.add(new ProductDTO(updatedEntity));
 			
@@ -110,10 +110,10 @@ public class ProductController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteProduct(@AuthenticationPrincipal String userId, @PathVariable("id") Integer id){
 		try {
-			ProductEntity entity = productService.retrieve(id);
+			Product entity = productService.retrieve(id);
 			productService.delete(entity);
 			
-			List<ProductEntity> entities =  productService.retrieveAll();
+			List<Product> entities =  productService.retrieveAll();
 			List<ProductDTO> dtos = entities.stream().map(ProductDTO::new).collect(Collectors.toList());
 			ResponseDTO<ProductDTO> response = ResponseDTO.<ProductDTO>builder().data(dtos).build();
 			return ResponseEntity.ok().body(response);

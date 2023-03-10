@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.samseung.ceas.dto.CommentsDTO;
 import com.samseung.ceas.dto.ResponseDTO;
-import com.samseung.ceas.model.CommentsEntity;
+import com.samseung.ceas.model.Comment;
 import com.samseung.ceas.service.CommentsService;
 
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class CommentsController {
 		
 		try {
 			
-			List<CommentsEntity> entities = commentsService.retrieveAll(id);
+			List<Comment> entities = commentsService.retrieveAll(id);
 			List<CommentsDTO> dtos = entities.stream().map(CommentsDTO::new).collect(Collectors.toList());
 			
 			ResponseDTO<CommentsDTO> response = ResponseDTO.<CommentsDTO>builder().data(dtos).build();
@@ -60,7 +60,7 @@ public class CommentsController {
         
         try {
         	
-        	CommentsEntity entity = CommentsDTO.toEntity(dto);
+        	Comment entity = CommentsDTO.toEntity(dto);
         	
 //        	UserEntity userEntity = userRepository.findByUserId(userId).orElseThrow(RuntimeException::new);
 //        	String name = userEntity.getUserName();
@@ -73,7 +73,7 @@ public class CommentsController {
         	
             log.info("entity: " + entity.toString());
 			
-            CommentsEntity createdComments = commentsService.create(entity);
+            Comment createdComments = commentsService.create(entity);
 			List<CommentsDTO> dtos = new ArrayList<>();
 			dtos.add(new CommentsDTO(createdComments));
 			
@@ -89,10 +89,10 @@ public class CommentsController {
 	public ResponseEntity<?> updateComments(@AuthenticationPrincipal String userId, @PathVariable("id") Integer id, @PathVariable("c_id") Integer c_id, @RequestBody CommentsDTO dto){
 		try {
 			
-			CommentsEntity originalEntity = commentsService.retrieve(c_id);
+			Comment originalEntity = commentsService.retrieve(c_id);
 			originalEntity.setContent(dto.getContent());
 			
-			CommentsEntity updatedEntity = commentsService.update(originalEntity);
+			Comment updatedEntity = commentsService.update(originalEntity);
 			List<CommentsDTO> dtos = new ArrayList<>();
 			dtos.add(new CommentsDTO(updatedEntity));
 			
@@ -110,10 +110,10 @@ public class CommentsController {
 	@DeleteMapping("/{id}/comments/{c_id}")
 	public ResponseEntity<?> deleteComments(@AuthenticationPrincipal String userId, @PathVariable("id") Integer id, @PathVariable("c_id") Integer c_id){
 		try {
-			CommentsEntity entity = commentsService.retrieve(c_id);
+			Comment entity = commentsService.retrieve(c_id);
 			commentsService.delete(entity);
 			
-			List<CommentsEntity> entities =  commentsService.retrieveAll(id);
+			List<Comment> entities =  commentsService.retrieveAll(id);
 			List<CommentsDTO> dtos = entities.stream().map(CommentsDTO::new).collect(Collectors.toList());
 			ResponseDTO<CommentsDTO> response = ResponseDTO.<CommentsDTO>builder().data(dtos).build();
 			return ResponseEntity.ok().body(response);

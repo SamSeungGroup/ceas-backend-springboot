@@ -6,14 +6,13 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.samseung.ceas.model.CommentsEntity;
-import com.samseung.ceas.model.ProductEntity;
+import com.samseung.ceas.model.Comment;
 
 @Repository
-public interface CommentsRepository extends JpaRepository<CommentsEntity, Integer>{
+public interface CommentsRepository extends JpaRepository<Comment, Integer>{
 
-	Optional<CommentsEntity> findById(Integer c_id);
-	List<CommentsEntity> findByProductId(Integer productId);
+	Optional<Comment> findById(Integer c_id);
+	List<Comment> findByProductId(Integer productId);
 
 
 }

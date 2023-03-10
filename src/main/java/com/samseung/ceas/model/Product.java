@@ -1,15 +1,10 @@
 package com.samseung.ceas.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,8 +16,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Table(name = "Product")
-public class ProductEntity {
+
+public class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -32,14 +27,20 @@ public class ProductEntity {
 	
 	@Column(nullable = false)
 	private String productDescription;
-	
+
+	@Column(nullable = false)
+	private Integer productPrice;
+
 	@Column
-	private Integer productPositive;
-	
-	@Column
-	private String userId;
+	private Double productPositive;
+
+	@OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
+	List<Comment> commentList;
+
+	@ManyToOne
+	@JoinColumn(name = "user")
+	private User user;
 	
 	@CreatedDate
 	private LocalDateTime createdDate;
-
 }
