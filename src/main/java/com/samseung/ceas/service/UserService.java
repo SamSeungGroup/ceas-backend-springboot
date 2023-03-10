@@ -19,6 +19,7 @@ public class UserService {
 		if(userEntity == null || userEntity.getUserId() == null) {
 			throw new RuntimeException("Invalid arguments");
 		}
+		
 		final String userId = userEntity.getUserId();
 		if(userRepository.existsByUserId(userId)) {
 			log.warn("UserId already exists {}", userId);
@@ -35,4 +36,9 @@ public class UserService {
 		
 		return null;
 	}
+	
+	public UserEntity getByUserId(final String userId) {
+        return userRepository.findByUserId(userId);
+    }
+	
 }

@@ -15,11 +15,9 @@ import com.samseung.ceas.model.UserEntity;
 import com.samseung.ceas.security.TokenProvider;
 import com.samseung.ceas.service.UserService;
 
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/users")
 public class UserController {
 	@Autowired
 	private UserService userService;
@@ -28,7 +26,7 @@ public class UserController {
 	private TokenProvider tokenProvider;
 	private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	
-	@PostMapping("/signup")
+	@PostMapping
 	public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO){
 		try {
 			if(userDTO == null || userDTO.getUserPassword() == null) {
@@ -52,7 +50,7 @@ public class UserController {
 		}
 	}
 	
-	@PostMapping("/signin")
+	@PostMapping("/login")
 	public ResponseEntity<?> authenticate(@RequestBody UserDTO userDTO){
 		UserEntity user = userService.getByCredentials(userDTO.getUserId(), userDTO.getUserPassword(), passwordEncoder);
 		if(user != null) {

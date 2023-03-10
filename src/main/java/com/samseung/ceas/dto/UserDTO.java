@@ -16,4 +16,9 @@ public class UserDTO {
 	private String userPassword;
 	private String userEmail;
 	private String id;
+
+	
+	
+	
+	
 }

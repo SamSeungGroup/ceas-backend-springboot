@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,32 +15,40 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-@Entity
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Data
-@Table(name = "Product")
-public class ProductEntity {
+@Builder
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Entity
+
+@Table(name = "Comments")
+
+public class CommentsEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	
-	@Column(nullable = false)
-	private String productName;
-	
-	@Column(nullable = false)
-	private String productDescription;
+	private Integer c_id;
 	
 	@Column
-	private Integer productPositive;
+	private String content;
 	
-	@Column
-	private String userId;
-	
+	@Column(name = "created_date")
 	@CreatedDate
 	private LocalDateTime createdDate;
+	
+	
+	@Column(nullable = false)
+	private Integer productId;
+	
+	@Column
+	private String author;
+	
 
 }
+

@@ -11,9 +11,7 @@ import com.samseung.ceas.model.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 public class TokenProvider {
 	private static final String SECRET_KEY = "VsgJ2sdfF34sdNfd4Vdfy5OdfgDsa73Sadf1Y29dE3asBdbsSe";

@@ -26,11 +26,13 @@ import com.samseung.ceas.service.ProductService;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+	
 	@Autowired
 	private ProductService productService;
 	
 	@GetMapping
 	public ResponseEntity<?> retrieveProductList(){
+		
 		try {
 			List<ProductEntity> entities = productService.retrieveAll();
 			List<ProductDTO> dtos = entities.stream().map(ProductDTO::new).collect(Collectors.toList());
@@ -88,7 +90,6 @@ public class ProductController {
 		try {
 			ProductEntity originalEntity = productService.retrieve(id);
 			originalEntity.setProductName(dto.getProductName());
-			originalEntity.setCategory(dto.getCategory());
 			originalEntity.setProductDescription(dto.getProductDescription());
 			
 			ProductEntity updatedEntity = productService.update(originalEntity);
@@ -121,4 +122,5 @@ public class ProductController {
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
+	
 }
