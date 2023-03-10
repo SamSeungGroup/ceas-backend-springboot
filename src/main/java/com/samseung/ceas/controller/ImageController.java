@@ -46,41 +46,30 @@ public class ImageController {
         return ResponseEntity.ok().build();
     }
     
-//    @ResponseBody
-//    @GetMapping("/image/{id}")
-//    public UrlResource getImage(@AuthenticationPrincipal String userId, @PathVariable("id") long id)throws MalformedURLException {
-//    	
-//    	ImageEntity imageEntity = imageService.findImage(id).orElseThrow(RuntimeException::new);
-//    	
-//    	
-//        String imgPath = imageEntity.getStoredFileName();
-//        
-//        return new UrlResource("file:" + imgPath);
-//    }
-    
-//    @GetMapping("/image/{id}")
-//    public ResponseEntity<?> getImage (@AuthenticationPrincipal String userId, @PathVariable("id") long id)throws MalformedURLException {
-//        
-//        try {
-//        	
-//        	ImageEntity imageEntity = imageService.findImage(id).get();
-//        	
-//           	
+    @GetMapping("/image/{id}")
+    public ResponseEntity<?> getImage (@AuthenticationPrincipal String userId, @PathVariable("id") long id)throws MalformedURLException {
+        
+        try {
+        	
+        	ImageEntity imageEntity = imageService.findImage(id).get();
+        	
+           	
 //        	ImageDTO imageDTO = new ImageDTO();
 //        	imageDTO.setId(imageEntity.getId());
 //        	imageDTO.setStoredFileName(imageEntity.getStoredFileName());
-//        	
-//        	List<ImageDTO> dtos = imageEntity.stream().map(ImageDTO::new).collect(Collectors.toList());
-//			
-//			ResponseDTO<ImageDTO> response = ResponseDTO.<ImageDTO>builder().data(dtos).build();
-//			return ResponseEntity.ok().body(response);			
-//		}catch (NoSuchElementException e) {
-//			ResponseDTO<ImageDTO> response = ResponseDTO.<ImageDTO>builder().error("Entity is not existed").build();
-//			return ResponseEntity.badRequest().body(response);
-//		}catch (Exception e) {
-//			ResponseDTO<ImageDTO> response = ResponseDTO.<ImageDTO>builder().error("An unexpected error occurred").build();
-//			return ResponseEntity.badRequest().body(response);
-//		}
-//    }
+        	
+			List<ImageDTO> dtos = new ArrayList<>();
+			dtos.add(new ImageDTO(imageEntity));
+        				
+			ResponseDTO<ImageDTO> response = ResponseDTO.<ImageDTO>builder().data(dtos).build();
+			return ResponseEntity.ok().body(response);			
+		}catch (NoSuchElementException e) {
+			ResponseDTO<ImageDTO> response = ResponseDTO.<ImageDTO>builder().error("Entity is not existed").build();
+			return ResponseEntity.badRequest().body(response);
+		}catch (Exception e) {
+			ResponseDTO<ImageDTO> response = ResponseDTO.<ImageDTO>builder().error("An unexpected error occurred").build();
+			return ResponseEntity.badRequest().body(response);
+		}
+    }
     
 }

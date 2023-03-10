@@ -41,7 +41,7 @@ public class ImageHandler {
         String absolutePath = new File("").getAbsolutePath() + "\\";
 
         // 경로를 지정하고 그곳에다가 저장
-        String path = "image/" + current_date;
+        String path = "src/main/resources/static/image/" + current_date;
         File file = new File(path);
         // 저장할 위치의 디렉토리가 존지하지 않을 경우
         if (!file.exists()) {
