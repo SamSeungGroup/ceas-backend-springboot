@@ -8,21 +8,20 @@ import com.samseung.ceas.model.Comment;
 import com.samseung.ceas.model.Product;
 
 import com.samseung.ceas.model.User;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDTO {
-	private Integer id;
+	private Long id;
 	private String productName;
 	private String productDescription;
+	private String productImage;
 	private Integer productPrice;
 	private Double productPositive;
 	private List<Comment> commentList;
@@ -33,6 +32,7 @@ public class ProductDTO {
 		this.id = product.getId();
 		this.productName = product.getProductName();
 		this.productDescription = product.getProductDescription();
+		this.productImage = product.getProductImage();
 		this.productPrice = product.getProductPrice();
 		this.productPositive = product.getProductPositive();
 		this.commentList = product.getCommentList();
@@ -45,6 +45,7 @@ public class ProductDTO {
 				.id(dto.getId())
 				.productName(dto.getProductName())
 				.productDescription(dto.getProductDescription())
+				.productImage(dto.getProductImage())
 				.productPrice(dto.getProductPrice())
 				.productPositive(dto.getProductPositive())
 				.commentList(dto.getCommentList())

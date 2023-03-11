@@ -21,7 +21,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Entity
-
 public class Comment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,11 +37,11 @@ public class Comment {
 	private LocalDateTime createdDate;
 
 	@ManyToOne
-	@JoinColumn(name="product")
+	@JoinColumn(name="product_id")
 	private Product product;
 
 	@ManyToOne
-	@JoinColumn(name="user")
+	@JoinColumn(name="user_id")
 	private User writer;
 }
 
