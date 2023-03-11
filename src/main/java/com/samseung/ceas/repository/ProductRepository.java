@@ -11,11 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.samseung.ceas.model.Product;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Integer>{
-	
-	Optional<Product> findById(Integer productId);
-	
+public interface ProductRepository extends JpaRepository<Product, Long>{
+	Optional<Product> findById(Long productId);
 	Page<Product> findAll(Pageable pageable);
-	
-	
 }

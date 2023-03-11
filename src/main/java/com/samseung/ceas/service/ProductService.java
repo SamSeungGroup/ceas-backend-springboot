@@ -26,7 +26,6 @@ public class ProductService {
 			log.warn("Product Table is empty");
 			throw new IllegalStateException("Product Table is empty");
 		}
-
 	}
 
 	public Product create(Product product) {
@@ -47,13 +46,13 @@ public class ProductService {
 			log.warn("Entity cannot be null");
 			throw new IllegalStateException("Entity cannot be null.");
 		}
-		if (product.getUserId() == null) {
+		if (product.getUser() == null) {
 			log.warn("Unknown user");
 			throw new IllegalStateException("Unknown user.");
 		}
 	}
 
-	public Product retrieve(final Integer productId) {
+	public Product retrieve(final Long productId) {
 		final Optional<Product> entity = productRepository.findById(productId);
 		return entity.orElseThrow(() -> {
 			log.info("Entity is not existed");
@@ -87,6 +86,6 @@ public class ProductService {
 		return productRepository.findAll();
 	}
 
-	
-	
+
+
 }

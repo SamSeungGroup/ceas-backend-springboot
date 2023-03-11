@@ -16,17 +16,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-
 public class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
 	
 	@Column(nullable = false)
 	private String productName;
-	
+
 	@Column(nullable = false)
 	private String productDescription;
+
+	@Column
+	private String productImage;
 
 	@Column(nullable = false)
 	private Integer productPrice;
@@ -34,11 +36,11 @@ public class Product {
 	@Column
 	private Double productPositive;
 
-	@OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
 	private List<Comment> commentList;
 
 	@ManyToOne
-	@JoinColumn(name = "user")
+	@JoinColumn(name = "user_id")
 	private User user;
 	
 	@CreatedDate
