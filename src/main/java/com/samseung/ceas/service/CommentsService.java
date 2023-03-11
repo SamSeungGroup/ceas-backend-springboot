@@ -27,12 +27,12 @@ public class CommentsService {
 		try { 
 			validate(comment);
 			commentsRepository.save(comment);
-			log.info("Reply Id: {} is saved", comment.getC_id());
+			log.info("Reply Id: {} is saved", comment.getCommentId());
 			
-			Comment savedEntity = commentsRepository.findById(comment.getC_id()).get();
+			Comment savedEntity = commentsRepository.findById(comment.getCommentId()).get();
 			return savedEntity;
 		} catch (Exception e) {
-			log.error("An error occurred while creating a comments", comment.getC_id(), e);
+			log.error("An error occurred while creating a comments", comment.getCommentId(), e);
 			throw new RuntimeException("An error occurred while creating a comments", e);
 		}
 	}
@@ -53,7 +53,7 @@ public class CommentsService {
 			log.warn("Entity cannot be null");
 			throw new IllegalStateException("Entity cannot be null.");
 		}
-		if (comment.getAuthor() == null) {
+		if (comment.getWriter() == null) {
 			log.warn("Unknown user");
 			throw new IllegalStateException("Unknown user.");
 		}
@@ -69,7 +69,7 @@ public class CommentsService {
 
 	public Comment update(final Comment comment) {
 		validate(comment);
-		final Optional<Comment> originalEntity = commentsRepository.findById(comment.getC_id());
+		final Optional<Comment> originalEntity = commentsRepository.findById(comment.getCommentId());
 		originalEntity.ifPresentOrElse((entity) -> {
 			
 			entity.setContent(comment.getContent());
@@ -79,7 +79,7 @@ public class CommentsService {
 			log.warn("Entity is not existed");
 			throw new NoSuchElementException("Entity is not existed");
 		});
-		return retrieve(comment.getC_id());
+		return retrieve(comment.getCommentId());
 
 	}
 
@@ -87,8 +87,8 @@ public class CommentsService {
 		try {
 			commentsRepository.delete(comment);
 		} catch (Exception e) {
-			log.error("An error occurred while deleting a comments", comment.getC_id(), e);
-			throw new RuntimeException("An error occurred while deleting a Comments" + comment.getC_id(), e);
+			log.error("An error occurred while deleting a comments", comment.getCommentId(), e);
+			throw new RuntimeException("An error occurred while deleting a Comments" + comment.getCommentId(), e);
 		}
 		return commentsRepository.findAll();
 	}

@@ -7,6 +7,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.samseung.ceas.dto.ProductDTO;
@@ -22,13 +23,13 @@ public class PageController {
     @Autowired
     ProductRepository productRepository;
 
-    @GetMapping("/page")
-    public Page<ProductDTO> paging(@AuthenticationPrincipal String userId, Model model, @PageableDefault(size=10, sort="createdDate") Pageable pageRequest) {
+    @GetMapping("/paging")
+    public Page<ProductDTO> paging(@AuthenticationPrincipal String userId, Model model,@PageableDefault(size=10, sort="createdDate") Pageable pageRequest) {
  
         Page<Product> productList = productRepository.findAll(pageRequest);
 
         Page<ProductDTO> pagingList = productList.map(
-                post -> new ProductDTO(post.getId(),post.getProductName(), post.getProductDescription(), post.getUserId(), post.getCreatedDate()));
+                post -> new ProductDTO(post.getId(),post.getProductName(), post.getProductDescription(), post.getProductImage(), post.getProductPrice(),post.getProductPositive(),null, null, post.getCreatedDate()));
         
         //html로 넘기는 함수
         model.addAttribute("pagingList", pagingList);

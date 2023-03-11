@@ -5,6 +5,9 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.samseung.ceas.model.Product;
@@ -66,6 +69,8 @@ public class ProductService {
 		final Optional<Product> originalEntity = productRepository.findById(product.getId());
 		originalEntity.ifPresentOrElse((entity) -> {
 			entity.setProductName(product.getProductName());
+			entity.setProductPrice(product.getProductPrice());
+			entity.setProductImage(product.getProductImage());
 			entity.setProductDescription(product.getProductDescription());
 			productRepository.save(entity);
 		}, () -> {
