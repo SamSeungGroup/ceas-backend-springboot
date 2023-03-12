@@ -94,7 +94,7 @@ public class ImageHandler {
         return imageList;
     }
 
-    public List<Image> parseFileProductInfo(Long imageID, List<MultipartFile> multipartFiles, ProductDTO productDTO) throws Exception {
+    public List<Image> parseFileProductInfo(Long imageId, List<MultipartFile> multipartFiles, ProductDTO productDTO) throws Exception {
 
         // 반환을 할 파일 리스트
         List<Image> imageList = new ArrayList<>();

@@ -34,9 +34,9 @@ public class ImageService {
 		}
 	}
 
-	public void addProductImage(Long imageId, List<MultipartFile> files, ProductDTO productDTO) throws Exception {
+	public void addProductImage(Image image, List<MultipartFile> files, ProductDTO productDTO) throws Exception {
 		// 파일을 저장하고 그 Board 에 대한 list 를 가지고 있는다
-		List<Image> list = imageHandler.parseFileProductInfo(imageId, files, productDTO);
+		List<Image> list = imageHandler.parseFileProductInfo(image.getId(), files, productDTO);
 		for (Image images : list) {
 			imageRepository.save(images);
 		}
