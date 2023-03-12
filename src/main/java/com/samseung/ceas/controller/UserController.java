@@ -162,7 +162,7 @@ public class UserController {
 		try {
 			if(userService.retrieve(userId).getId().equals(id)){
 				User originUser = userService.retrieve(userId);
-				String userImage = originUser.getUserImage();
+				Image userImage = originUser.getUserImage();
 
 				Image image;
 				if(userImage!=null){
@@ -173,7 +173,7 @@ public class UserController {
 				imageService.addUserImage(image, files, userDTO);
 				Image savedImage = imageService.findByUserId(id);
 
-				originUser.setUserImage(savedImage.getStoredFileName());
+				originUser.setUserImage(savedImage);
 				originUser.setUserEmail(userDTO.getUserEmail());
 
 				User savedUser = userService.update(originUser);

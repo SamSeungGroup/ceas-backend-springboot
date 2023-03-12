@@ -1,5 +1,6 @@
 package com.samseung.ceas.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -31,6 +32,7 @@ public class User {
 	@Column(nullable = false)
 	private String userEmail;
 
-	@Column
-	private String userImage;
+	@OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+	@JsonIgnoreProperties({"user"})
+	private Image userImage;
 }

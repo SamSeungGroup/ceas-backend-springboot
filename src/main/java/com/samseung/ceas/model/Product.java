@@ -3,6 +3,7 @@ package com.samseung.ceas.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -27,8 +28,9 @@ public class Product {
 	@Column(nullable = false)
 	private String productDescription;
 
-	@Column
-	private String productImage;
+	@OneToOne(mappedBy = "product", cascade = CascadeType.REMOVE)
+	@JsonIgnoreProperties({"product"})
+	private Image productImage;
 
 	@Column(nullable = false)
 	private Integer productPrice;
@@ -37,11 +39,12 @@ public class Product {
 	private Double productPositive;
 
 	@OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+	@JsonIgnoreProperties({"product"})
 	private List<Comment> commentList;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	private User user;
+	private User seller;
 	
 	@CreatedDate
 	private LocalDateTime createdDate;

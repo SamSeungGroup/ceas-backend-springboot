@@ -1,26 +1,22 @@
 package com.samseung.ceas.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import com.samseung.ceas.model.Comment;
 
 import com.samseung.ceas.model.Product;
 import com.samseung.ceas.model.User;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class CommentDTO {
-	private Integer commentId;
+	private Long id;
 	private String content;
 	private Double commentPositive;
 	private LocalDateTime createdDate;
@@ -28,7 +24,7 @@ public class CommentDTO {
 	private User writer;
 
     public CommentDTO(final Comment comment) {
-        this.commentId = comment.getCommentId();
+        this.id = comment.getId();
         this.content = comment.getContent();
         this.commentPositive = comment.getCommentPositive();
         this.createdDate = comment.getCreatedDate();
@@ -38,7 +34,7 @@ public class CommentDTO {
 
     public static Comment toEntity(final CommentDTO dto) {
         return Comment.builder()
-                .commentId(dto.getCommentId())
+                .id(dto.getId())
 				.content(dto.getContent())
                 .commentPositive(dto.getCommentPositive())
                 .createdDate(dto.getCreatedDate())

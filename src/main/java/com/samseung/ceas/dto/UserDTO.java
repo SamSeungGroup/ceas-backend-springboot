@@ -1,5 +1,6 @@
 package com.samseung.ceas.dto;
 
+import com.samseung.ceas.model.Image;
 import com.samseung.ceas.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +17,7 @@ public class UserDTO {
 	private String userId;
 	private String userPassword;
 	private String userEmail;
-	private String userImage;
+	private Image userImage;
 	private String id;
 
 	public UserDTO(final User user) {
@@ -35,7 +36,6 @@ public class UserDTO {
 				.userId(dto.getUserId())
 				.userPassword(dto.getUserPassword())
 				.userEmail(dto.getUserEmail())
-				.userImage(dto.getUserImage())
 				.build();
 	}
 }
