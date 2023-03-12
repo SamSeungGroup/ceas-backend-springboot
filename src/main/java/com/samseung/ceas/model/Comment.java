@@ -2,6 +2,7 @@ package com.samseung.ceas.model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -24,19 +25,20 @@ import lombok.ToString;
 public class Comment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer commentId;
+	private Long id;
 	
 	@Column(nullable = false)
 	private String content;
 
-	@Column(nullable = false)
+	@Column
 	private Double commentPositive;
 	
-	@Column(name = "created_date")
+	@Column
 	@CreatedDate
 	private LocalDateTime createdDate;
 
 	@ManyToOne
+	@JsonIgnoreProperties({"comment"})
 	@JoinColumn(name="product_id")
 	private Product product;
 
