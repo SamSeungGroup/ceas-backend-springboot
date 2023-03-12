@@ -55,35 +55,35 @@ public class CommentsController {
 		}
 	}
 	
-    @PostMapping("/{id}/comments")
-    public ResponseEntity<?> createComments (@AuthenticationPrincipal String userId, @PathVariable("id") Integer id, @RequestBody CommentDTO dto) {
-        
-        try {
-        	
-        	Comment entity = CommentDTO.toEntity(dto);
-        	
-//        	UserEntity userEntity = userRepository.findByUserId(userId).orElseThrow(RuntimeException::new);
-//        	String name = userEntity.getUserName();
-   
-        	
-        	entity.setC_id(null);
-        	entity.setCreatedDate(LocalDateTime.now());
-        	entity.setAuthor("!");//해결 x
-        	entity.setProductId(id);
-        	
-            log.info("entity: " + entity.toString());
-			
-            Comment createdComments = commentsService.create(entity);
-			List<CommentDTO> dtos = new ArrayList<>();
-			dtos.add(new CommentDTO(createdComments));
-			
-			ResponseDtos<CommentDTO> response = ResponseDtos.<CommentDTO>builder().data(dtos).build();
-			return ResponseEntity.ok().body(response);
-		}catch (Exception e) {
-			ResponseDtos<CommentDTO> response = ResponseDtos.<CommentDTO>builder().error("An unexpected error occurred").build();
-			return ResponseEntity.badRequest().body(response);
-		}
-    }
+//    @PostMapping("/{id}/comments")
+//    public ResponseEntity<?> createComments (@AuthenticationPrincipal String userId, @PathVariable("id") Integer id, @RequestBody CommentDTO dto) {
+//        
+//        try {
+//        	
+//        	Comment entity = CommentDTO.toEntity(dto);
+//        	
+////        	UserEntity userEntity = userRepository.findByUserId(userId).orElseThrow(RuntimeException::new);
+////        	String name = userEntity.getUserName();
+//   
+//        	
+//        	entity.setC_id(null);
+//        	entity.setCreatedDate(LocalDateTime.now());
+//        	entity.setAuthor("!");//해결 x
+//        	entity.setProductId(id);
+//        	
+//            log.info("entity: " + entity.toString());
+//			
+//            Comment createdComments = commentsService.create(entity);
+//			List<CommentDTO> dtos = new ArrayList<>();
+//			dtos.add(new CommentDTO(createdComments));
+//			
+//			ResponseDtos<CommentDTO> response = ResponseDtos.<CommentDTO>builder().data(dtos).build();
+//			return ResponseEntity.ok().body(response);
+//		}catch (Exception e) {
+//			ResponseDtos<CommentDTO> response = ResponseDtos.<CommentDTO>builder().error("An unexpected error occurred").build();
+//			return ResponseEntity.badRequest().body(response);
+//		}
+//    }
     
 	@PutMapping("/{id}/comments/{c_id}")
 	public ResponseEntity<?> updateComments(@AuthenticationPrincipal String userId, @PathVariable("id") Integer id, @PathVariable("c_id") Integer c_id, @RequestBody CommentDTO dto){
