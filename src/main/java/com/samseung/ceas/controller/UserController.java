@@ -61,25 +61,21 @@ public class UserController {
 
 	// 비밀번호 초기화
 	@PutMapping
-	public ResponseEntity<?> resetPassword(@AuthenticationPrincipal String userId, @RequestBody UserDTO userDTO){
+	public ResponseEntity<?> resetPassword(@RequestBody UserDTO userDTO){
 		try {
-			User originUser = userService.retrieve(userId);
-			if(userDTO.getUserId().equals(originUser.getUserId()) && userDTO.getUserEmail().equals(originUser.getUserEmail())) {
-				String tempPassword = userService.getTempPassword();
-				originUser.setUserPassword(passwordEncoder.encode(tempPassword));
+			User originUser = userService.retrieveByUserIdAndUserEmail(userDTO.getUserId(), userDTO.getUserEmail());
+			String tempPassword = userService.getTempPassword();
+			originUser.setUserPassword(passwordEncoder.encode(tempPassword));
 
-				User updatedUser = userService.update(originUser);
-				UserDTO userDto = UserDTO.builder()
-						.userName(updatedUser.getUserName())
-						.userPassword(tempPassword)
-						.build();
-				ResponseDto<UserDTO> response = ResponseDto.<UserDTO>builder().data(userDto).build();
-				return ResponseEntity.ok().body(response);
-			}else {
-				ResponseDto responseDto = ResponseDto.builder().error("userName and userEmail doesn't match.").build();
-				return ResponseEntity.badRequest().body(responseDto);
-			}
-		}catch (Exception e) {
+			User updatedUser = userService.update(originUser);
+			UserDTO userDto = UserDTO.builder()
+					.userName(updatedUser.getUserName())
+					.userEmail(updatedUser.getUserEmail())
+					.userPassword(tempPassword)
+					.build();
+			ResponseDto<UserDTO> response = ResponseDto.<UserDTO>builder().data(userDto).build();
+			return ResponseEntity.ok().body(response);
+		} catch (Exception e) {
 			ResponseDto responseDto = ResponseDto.builder().error(e.getMessage()).build();
 			return ResponseEntity.badRequest().body(responseDto);
 		}
@@ -174,6 +170,7 @@ public class UserController {
 				Image savedImage = imageService.findByUserId(id);
 
 				originUser.setUserImage(savedImage);
+				originUser.setUserName(userDTO.getUserName());
 				originUser.setUserEmail(userDTO.getUserEmail());
 
 				User savedUser = userService.update(originUser);

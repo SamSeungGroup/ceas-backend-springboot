@@ -60,6 +60,10 @@ public class UserService {
 		}
     }
 
+	public User retrieveByUserIdAndUserEmail(final String userId, final String userEmail){
+		return userRepository.findByUserIdAndUserEmail(userId, userEmail);
+	}
+
 	public User update(final User user){
 		final Optional<User> original = userRepository.findById(user.getId());
 		original.ifPresentOrElse((entity) -> {
