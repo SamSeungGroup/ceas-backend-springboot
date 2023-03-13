@@ -15,7 +15,6 @@ import com.samseung.ceas.repository.ImageRepository;
 
 @Service
 public class ImageService {
-
 	@Autowired
 	private final ImageRepository imageRepository;
 	@Autowired
@@ -42,16 +41,11 @@ public class ImageService {
 		}
 	}
 
-	public List<Image> findImages() {
-		return imageRepository.findAll();
-	}
-	public Optional<Image> findImage(long id) {
-		return imageRepository.findById(id);
-	}
-	public Image findByUserId(String userId){
+	public Image findByUserId(String userId) {
 		return imageRepository.findByUser_Id(userId);
 	}
-	public Image findByProductId(Long productId){
+
+	public Image findByProductId(Long productId) {
 		return imageRepository.findByProduct_Id(productId);
 	}
 }
