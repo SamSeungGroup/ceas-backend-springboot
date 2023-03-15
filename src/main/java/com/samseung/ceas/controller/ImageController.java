@@ -29,7 +29,7 @@ public class ImageController {
         }
     }
 
-    @GetMapping("/products/{productId}")
+    @GetMapping("/product/{productId}")
     public ResponseEntity<?> getImage (@PathVariable("productId") long productId) {
         try {
             Image image = imageService.findByProductId(productId);
