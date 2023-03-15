@@ -1,5 +1,6 @@
 package com.samseung.ceas.controller;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -141,8 +142,10 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@AuthenticationPrincipal String userId, @PathVariable("id") Long id) {
         try {
-            Product entity = productService.retrieve(id);
-            productService.delete(entity);
+            Product product = productService.retrieve(id);
+            productService.delete(product);
+            File file = new File(product.getProductImage().getStoredFileName());
+            file.delete();
 
             List<Product> products = productService.retrieveAll();
             List<ProductDTO> dtos = products.stream().map(ProductDTO::new).collect(Collectors.toList());

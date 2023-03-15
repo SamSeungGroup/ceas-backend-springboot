@@ -18,6 +18,7 @@ import com.samseung.ceas.security.TokenProvider;
 import com.samseung.ceas.service.UserService;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -195,6 +196,8 @@ public class UserController {
 			if(userService.retrieve(userId).getId().equals(id)){
 				User user = userService.retrieve(userId);
 				userService.delete(user);
+				File file = new File(user.getUserImage().getStoredFileName());
+				file.delete();
 
 				List<User> entities =  userService.retrieveAll();
 				List<UserDTO> dtos = entities.stream().map(UserDTO::new).collect(Collectors.toList());
