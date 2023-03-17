@@ -63,9 +63,8 @@ public class CommentService {
 		validate(comment);
 		final Optional<Comment> originalEntity = commentRepository.findById(comment.getId());
 		originalEntity.ifPresentOrElse((entity) -> {
-			
 			entity.setContent(comment.getContent());
-			
+			entity.setCommentPositive(comment.getCommentPositive());
 			commentRepository.save(entity);
 		}, () -> {
 			log.warn("Entity is not existed");

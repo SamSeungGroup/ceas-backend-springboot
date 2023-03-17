@@ -1,11 +1,13 @@
 package com.samseung.ceas.controller;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import com.samseung.ceas.dto.ResponseDto;
+import com.samseung.ceas.model.Product;
 import com.samseung.ceas.service.ProductService;
 import com.samseung.ceas.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import com.samseung.ceas.dto.CommentDTO;
 import com.samseung.ceas.dto.ResponseDtos;
 import com.samseung.ceas.model.Comment;
 import com.samseung.ceas.service.CommentService;
+import org.springframework.web.client.RestTemplate;
 
 @RequestMapping("/products")
 @RestController
@@ -57,6 +60,20 @@ public class CommentController {
 
             Comment createdComment = commentService.create(comment);
 
+            RestTemplate restTemplate = new RestTemplate();
+            String flaskUrl = "http://localhost:5000/comment-positive/" + createdComment.getId();
+            HashMap<String, Double> comment_positive = restTemplate.getForObject(flaskUrl, HashMap.class);
+            createdComment.setCommentPositive(comment_positive.get("comment_positive"));
+            commentService.update(createdComment);
+
+            Product product = productService.retrieve(productId);
+            List<Comment> commentList = commentService.retrieveAll(productId);
+            Double productPositive = commentList.stream().mapToDouble(Comment::getCommentPositive).average().orElse(0.0);
+
+            productPositive = Math.round(productPositive*1000D)/1000D;
+            product.setProductPositive(productPositive);
+            productService.update(product);
+
             CommentDTO commentDto = new CommentDTO(createdComment);
             ResponseDto<CommentDTO> response = ResponseDto.<CommentDTO>builder().data(commentDto).build();
             return ResponseEntity.ok().body(response);
@@ -73,6 +90,20 @@ public class CommentController {
 			origin.setContent(dto.getContent());
 
             Comment updatedComment = commentService.update(origin);
+
+            RestTemplate restTemplate = new RestTemplate();
+            String flaskUrl = "http://localhost:5000/comment-positive/" + updatedComment.getId();
+            HashMap<String, Double> comment_positive = restTemplate.getForObject(flaskUrl, HashMap.class);
+            updatedComment.setCommentPositive(comment_positive.get("comment_positive"));
+            commentService.update(updatedComment);
+
+            Product product = productService.retrieve(productId);
+            List<Comment> commentList = commentService.retrieveAll(productId);
+            Double productPositive = commentList.stream().mapToDouble(Comment::getCommentPositive).average().orElse(0.0);
+
+            productPositive = Math.round(productPositive*1000D)/1000D;
+            product.setProductPositive(productPositive);
+            productService.update(product);
 
 			CommentDTO commentDto = new CommentDTO(updatedComment);
             ResponseDto<CommentDTO> response = ResponseDto.<CommentDTO>builder().data(commentDto).build();
@@ -91,6 +122,14 @@ public class CommentController {
         try {
             Comment coment = commentService.retrieve(id);
             commentService.delete(coment);
+
+            Product product = productService.retrieve(productId);
+            List<Comment> commentList = commentService.retrieveAll(productId);
+            Double productPositive = commentList.stream().mapToDouble(Comment::getCommentPositive).average().orElse(0.0);
+
+            productPositive = Math.round(productPositive*1000D)/1000D;
+            product.setProductPositive(productPositive);
+            productService.update(product);
 
             List<Comment> comments = commentService.retrieveAll(productId);
             List<CommentDTO> dtos = comments.stream().map(CommentDTO::new).collect(Collectors.toList());

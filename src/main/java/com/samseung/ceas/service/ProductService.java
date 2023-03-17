@@ -69,6 +69,7 @@ public class ProductService {
 			entity.setProductPrice(product.getProductPrice());
 			entity.setProductImage(product.getProductImage());
 			entity.setProductDescription(product.getProductDescription());
+			entity.setProductPositive(product.getProductPositive());
 			productRepository.save(entity);
 		}, () -> {
 			log.warn("Entity is not existed");
