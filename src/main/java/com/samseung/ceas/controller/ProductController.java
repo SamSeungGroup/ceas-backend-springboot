@@ -2,6 +2,7 @@ package com.samseung.ceas.controller;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.samseung.ceas.dto.ProductDTO;
@@ -69,6 +71,7 @@ public class ProductController {
             Product product = ProductDTO.toEntity(dto);
 
             product.setId(null);
+            product.setProductPositive(0.0D);
             product.setSeller(userService.retrieve(userId));
             product.setCreatedDate(LocalDateTime.now());
 
@@ -146,6 +149,10 @@ public class ProductController {
             productService.delete(product);
             File file = new File(product.getProductImage().getStoredFileName());
             file.delete();
+
+            RestTemplate restTemplate = new RestTemplate();
+            String flaskUrl = "http://localhost:5000/word-cloud/" + id;
+            restTemplate.delete(flaskUrl);
 
             List<Product> products = productService.retrieveAll();
             List<ProductDTO> dtos = products.stream().map(ProductDTO::new).collect(Collectors.toList());
