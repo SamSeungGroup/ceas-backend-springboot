@@ -18,11 +18,9 @@ public class CommentService {
 	public Comment create(Comment comment) {
 		try { 
 			validate(comment);
-			commentRepository.save(comment);
-			log.info("Reply Id: {} is saved", comment.getId());
-			
-			Comment savedEntity = commentRepository.findById(comment.getId()).get();
-			return savedEntity;
+			Comment savedComment = commentRepository.save(comment);
+			log.info("Reply Id: {} is saved", savedComment.getId());
+			return savedComment;
 		} catch (Exception e) {
 			log.error("An error occurred while creating a comments", comment.getId(), e);
 			throw new RuntimeException("An error occurred while creating a comments", e);
@@ -52,8 +50,8 @@ public class CommentService {
 	}
 	
 	public Comment retrieve(final Long id) {
-		final Optional<Comment> entity = commentRepository.findById(id);
-		return entity.orElseThrow(() -> {
+		final Optional<Comment> comment = commentRepository.findById(id);
+		return comment.orElseThrow(() -> {
 			log.info("Entity is not existed");
 			throw new NoSuchElementException("Entity is not existed");
 		});
@@ -66,6 +64,7 @@ public class CommentService {
 			entity.setContent(comment.getContent());
 			entity.setCommentPositive(comment.getCommentPositive());
 			commentRepository.save(entity);
+			log.info("Comment Id: {} is updated", entity.getId());
 		}, () -> {
 			log.warn("Entity is not existed");
 			throw new NoSuchElementException("Entity is not existed");
@@ -77,6 +76,7 @@ public class CommentService {
 	public List<Comment> delete(final Comment comment) {
 		try {
 			commentRepository.delete(comment);
+			log.info("Comment Id: {} is deleted", comment.getId());
 		} catch (Exception e) {
 			log.error("An error occurred while deleting a comments", comment.getId(), e);
 			throw new RuntimeException("An error occurred while deleting a Comments" + comment.getId(), e);

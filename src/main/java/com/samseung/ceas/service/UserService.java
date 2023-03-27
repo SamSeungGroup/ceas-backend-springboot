@@ -28,7 +28,9 @@ public class UserService {
 			log.warn("UserId already exists {}", userId);
 			throw new RuntimeException("UserId already exists");
 		}
-		return userRepository.save(user);
+		User savedUser = userRepository.save(user);
+		log.info("User Id: {} is saved", savedUser.getId());
+		return savedUser;
 	}
 	
 	public User getByCredentials(final String userId, final String password, final PasswordEncoder encoder) {
@@ -54,7 +56,6 @@ public class UserService {
 		if(user != null){
 			return user;
 		}else{
-			log.info(user.getUserId());
 			log.info("Entity is not existed");
 			throw new NoSuchElementException("Entity is not existed");
 		}
@@ -67,10 +68,12 @@ public class UserService {
 	public User update(final User user){
 		final Optional<User> original = userRepository.findById(user.getId());
 		original.ifPresentOrElse((entity) -> {
+			entity.setUserName(user.getUserName());
 			entity.setUserPassword(user.getUserPassword());
 			entity.setUserEmail(user.getUserEmail());
 			entity.setUserImage(user.getUserImage());
 			userRepository.save(entity);
+			log.info("User Id: {} is updated", entity.getId());
 		}, () -> {
 			log.warn("Entity is not existed");
 			throw new NoSuchElementException("Entity is not existed");
@@ -81,6 +84,7 @@ public class UserService {
 	public List<User> delete(final User user) {
 		try {
 			userRepository.delete(user);
+			log.info("User Id: {} is deleted", user.getId());
 		} catch (Exception e) {
 			log.error("An error occurred while deleting a user", user.getId(), e);
 			throw new RuntimeException("An error occurred while deleting a user" + user.getId(), e);

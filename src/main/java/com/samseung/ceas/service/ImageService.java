@@ -1,10 +1,10 @@
 package com.samseung.ceas.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.samseung.ceas.dto.ProductDTO;
 import com.samseung.ceas.dto.UserDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,6 +13,7 @@ import com.samseung.ceas.handler.ImageHandler;
 import com.samseung.ceas.model.Image;
 import com.samseung.ceas.repository.ImageRepository;
 
+@Slf4j
 @Service
 public class ImageService {
 	@Autowired
@@ -31,6 +32,7 @@ public class ImageService {
 		for (Image images : list) {
 			imageRepository.save(images);
 		}
+		log.info("User Image: {} is saved", image.getOriginalFileName());
 	}
 
 	public void addProductImage(Image image, List<MultipartFile> files, ProductDTO productDTO) throws Exception {
@@ -39,6 +41,7 @@ public class ImageService {
 		for (Image images : list) {
 			imageRepository.save(images);
 		}
+		log.info("Product Image: {} is saved", image.getOriginalFileName());
 	}
 
 	public Image findByUserId(String userId) {

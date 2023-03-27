@@ -31,9 +31,8 @@ public class ProductService {
 	public Product create(Product product) {
 		try {
 			validate(product);
-			productRepository.save(product);
-			log.info("product Id: {} is saved", product.getId());
-			Product savedEntity = productRepository.findById(product.getId()).get();
+			Product savedEntity = productRepository.save(product);
+			log.info("product Id: {} is saved", savedEntity.getId());
 			return savedEntity;
 		} catch (Exception e) {
 			log.error("An error occurred while creating a product", product.getId(), e);
@@ -71,6 +70,7 @@ public class ProductService {
 			entity.setProductDescription(product.getProductDescription());
 			entity.setProductPositive(product.getProductPositive());
 			productRepository.save(entity);
+			log.info("Product Id: {} is updated", entity.getId());
 		}, () -> {
 			log.warn("Entity is not existed");
 			throw new NoSuchElementException("Entity is not existed");
@@ -81,6 +81,7 @@ public class ProductService {
 	public List<Product> delete(final Product product) {
 		try {
 			productRepository.delete(product);
+			log.info("Product Id: {} is deleted", product.getId());
 		} catch (Exception e) {
 			log.error("An error occurred while deleting a product", product.getId(), e);
 			throw new RuntimeException("An error occurred while deleting a product" + product.getId(), e);
