@@ -21,8 +21,8 @@ import com.samseung.ceas.model.Comment;
 import com.samseung.ceas.service.CommentService;
 import org.springframework.web.client.RestTemplate;
 
-@RequestMapping("/products")
 @RestController
+@RequestMapping("/products")
 public class CommentController {
 	@Autowired
 	private UserService userService;

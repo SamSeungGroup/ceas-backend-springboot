@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import com.samseung.ceas.model.Image;
 import com.samseung.ceas.service.ImageService;
 
-
-@RequestMapping("/images")
 @RestController
+@RequestMapping("/images")
 public class ImageController {
     @Autowired
     private ImageService imageService;
@@ -41,3 +40,4 @@ public class ImageController {
         }
     }
 }
+

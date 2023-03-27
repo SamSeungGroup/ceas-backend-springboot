@@ -30,9 +30,6 @@ import com.samseung.ceas.service.ImageService;
 import com.samseung.ceas.service.ProductService;
 import com.samseung.ceas.service.UserService;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @RestController
 @RequestMapping("/products")
 public class ProductController {
@@ -40,7 +37,6 @@ public class ProductController {
     private UserService userService;
     @Autowired
     private ProductService productService;
-
     @Autowired
     private ImageService imageService;
 
