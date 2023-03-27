@@ -35,4 +35,10 @@ public class User {
 	@OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties({"user"})
 	private Image userImage;
+
+	@Column
+	private String impId;
+
+	@Column
+	private String pgId;
 }

@@ -19,6 +19,8 @@ public class UserDTO {
 	private String userEmail;
 	private Image userImage;
 	private String id;
+	private String impId;
+	private String pgId;
 
 	public UserDTO(final User user) {
 		this.id = user.getId();
@@ -27,6 +29,8 @@ public class UserDTO {
 		this.userPassword = user.getUserPassword();
 		this.userEmail = user.getUserEmail();
 		this.userImage = user.getUserImage();
+		this.impId = user.getImpId();
+		this.pgId = user.getPgId();
 	}
 
 	public static User toEntity(final UserDTO dto) {
@@ -36,6 +40,8 @@ public class UserDTO {
 				.userId(dto.getUserId())
 				.userPassword(dto.getUserPassword())
 				.userEmail(dto.getUserEmail())
+				.impId(dto.getImpId())
+				.pgId(dto.getPgId())
 				.build();
 	}
 }

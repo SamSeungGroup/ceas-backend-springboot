@@ -112,6 +112,8 @@ public class UserController {
 						.userId(user.getUserId())
 						.userImage(user.getUserImage())
 						.userEmail(user.getUserEmail())
+						.impId(user.getImpId())
+						.pgId(user.getPgId())
 						.build();
 				ResponseDto response = ResponseDto.builder().data(dto).build();
 				return ResponseEntity.ok().body(response);
@@ -174,6 +176,8 @@ public class UserController {
 				originUser.setUserImage(savedImage);
 				originUser.setUserName(userDTO.getUserName());
 				originUser.setUserEmail(userDTO.getUserEmail());
+				originUser.setImpId(userDTO.getImpId());
+				originUser.setPgId(userDTO.getPgId());
 
 				User savedUser = userService.update(originUser);
 
