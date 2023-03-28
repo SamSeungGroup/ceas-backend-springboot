@@ -196,7 +196,7 @@ public class UserController {
 
 	// 회원 탈퇴
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteProduct(@AuthenticationPrincipal String userId, @PathVariable("id") String id){
+	public ResponseEntity<?> deleteUser(@AuthenticationPrincipal String userId, @PathVariable("id") String id){
 		try {
 			if(userService.retrieve(userId).getId().equals(id)){
 				User user = userService.retrieve(userId);
