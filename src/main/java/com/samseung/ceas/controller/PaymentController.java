@@ -51,7 +51,7 @@ public class PaymentController {
     }
 
     // 상품 결제 정보 조회
-    @GetMapping("/{product_id}")
+    @GetMapping("/products/{product_id}")
     public ResponseEntity<?> retrieveByProductId(@AuthenticationPrincipal String userId, @PathVariable Long product_id) {
         try {
             List<Payment> paymentList = paymentService.retrieveByProductId(product_id);
@@ -65,7 +65,7 @@ public class PaymentController {
     }
 
     // 결제 내역 등록
-    @PostMapping("/{product_id}")
+    @PostMapping("/products/{product_id}")
     public ResponseEntity<?> create(@AuthenticationPrincipal String userId, @PathVariable Long product_id, @RequestBody PaymentDTO dto) {
         Payment payment = PaymentDTO.toEntity(dto);
         payment.setId(null);
@@ -79,7 +79,7 @@ public class PaymentController {
     }
 
     // 취소 내역 등록
-    @PutMapping("/{product_id}")
+    @PutMapping("/products/{product_id}")
     public ResponseEntity<?> cancel(@AuthenticationPrincipal String userId, @PathVariable Long product_id, @RequestParam PaymentDTO dto) {
         Payment original = paymentService.retrieveByImpUid(dto.getImpUid());
         original.setStatus(dto.getStatus());
@@ -95,7 +95,7 @@ public class PaymentController {
     }
 
     // 유저 결제 정보 조회
-    @GetMapping("/{user_id}")
+    @GetMapping("/users/{user_id}")
     public ResponseEntity<?> retrieveByUserId(@AuthenticationPrincipal String userId, @PathVariable String user_id) {
         try {
             List<Payment> paymentList = paymentService.retrieveByBuyerId(user_id);
