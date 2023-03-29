@@ -53,10 +53,15 @@ public class PaymentController {
     // 상품 결제 정보 조회
     @GetMapping("/{product_id}")
     public ResponseEntity<?> retrieveByProductId(@AuthenticationPrincipal String userId, @PathVariable Long product_id) {
-        List<Payment> paymentList = paymentService.retrieveByProductId(product_id);
-        List<PaymentDTO> dtos = paymentList.stream().map(PaymentDTO::new).collect(Collectors.toList());
-        ResponseDtos<PaymentDTO> response = ResponseDtos.<PaymentDTO>builder().data(dtos).build();
-        return ResponseEntity.ok().body(response);
+        try {
+            List<Payment> paymentList = paymentService.retrieveByProductId(product_id);
+            List<PaymentDTO> dtos = paymentList.stream().map(PaymentDTO::new).collect(Collectors.toList());
+            ResponseDtos<PaymentDTO> response = ResponseDtos.<PaymentDTO>builder().data(dtos).build();
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            ResponseDto response = ResponseDto.builder().error(e.getMessage()).build();
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 
     // 결제 내역 등록
@@ -92,9 +97,15 @@ public class PaymentController {
     // 유저 결제 정보 조회
     @GetMapping("/{user_id}")
     public ResponseEntity<?> retrieveByUserId(@AuthenticationPrincipal String userId, @PathVariable String user_id) {
-        List<Payment> paymentList = paymentService.retrieveByBuyerId(user_id);
-        List<PaymentDTO> dtos = paymentList.stream().map(PaymentDTO::new).collect(Collectors.toList());
-        ResponseDtos<PaymentDTO> response = ResponseDtos.<PaymentDTO>builder().data(dtos).build();
-        return ResponseEntity.ok().body(response);
+        try {
+            List<Payment> paymentList = paymentService.retrieveByBuyerId(user_id);
+            List<PaymentDTO> dtos = paymentList.stream().map(PaymentDTO::new).collect(Collectors.toList());
+
+            ResponseDtos<PaymentDTO> response = ResponseDtos.<PaymentDTO>builder().data(dtos).build();
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            ResponseDto response = ResponseDto.builder().error(e.getMessage()).build();
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 }
