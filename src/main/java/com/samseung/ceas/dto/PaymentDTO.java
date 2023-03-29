@@ -64,10 +64,6 @@ public class PaymentDTO {
                 .pgProvider(dto.getPgProvider())
                 .status(dto.getStatus())
                 .success(dto.getSuccess())
-                .canceledAmount(dto.getCanceledAmount())
-                .canceledDate(Instant.ofEpochMilli(dto.getCanceledMilliseconds())
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDateTime())
                 .build();
     }
 }

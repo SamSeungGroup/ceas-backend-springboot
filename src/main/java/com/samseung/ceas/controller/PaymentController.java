@@ -16,6 +16,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,7 +79,9 @@ public class PaymentController {
         Payment original = paymentService.retrieveByImpUid(dto.getImpUid());
         original.setStatus(dto.getStatus());
         original.setCanceledAmount(dto.getCanceledAmount());
-        original.setCanceledDate(dto.getCanceledDate());
+        original.setCanceledDate(Instant.ofEpochMilli(dto.getCanceledMilliseconds())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime());
         Payment cancledPayment = paymentService.cancel(original);
 
         PaymentDTO paymentDTO = new PaymentDTO(cancledPayment);
