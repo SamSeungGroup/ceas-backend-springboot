@@ -196,10 +196,11 @@ public class UserController {
 
 	// 회원 탈퇴
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteUser(@AuthenticationPrincipal String userId, @PathVariable("id") String id){
+	public ResponseEntity<?> deleteUser(@AuthenticationPrincipal String userId, @PathVariable("id") String id, @RequestBody UserDTO userDTO){
 		try {
-			if(userService.retrieve(userId).getId().equals(id)){
-				User user = userService.retrieve(userId);
+			User user = userService.retrieve(userId);
+			UserDTO dto = userDTO;
+			if(user.getId().equals(id) && passwordEncoder.matches(dto.getUserPassword(), user.getUserPassword())){
 				userService.delete(user);
 				File file = new File(user.getUserImage().getStoredFileName());
 				file.delete();
