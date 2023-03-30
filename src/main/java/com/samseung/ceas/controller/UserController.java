@@ -156,9 +156,10 @@ public class UserController {
 
 	// 내 정보 수정
 	@PutMapping("/{id}")
-	public ResponseEntity<?> updateUser(@AuthenticationPrincipal String userId, @PathVariable("id") String id,
-										  @RequestPart("dto") UserDTO userDTO,
-										  @Validated @RequestPart("image") List<MultipartFile> files){
+	public ResponseEntity<?> updateUser(@AuthenticationPrincipal String userId,
+										@PathVariable("id") String id,
+                                        @RequestPart("dto") UserDTO userDTO,
+                                        @Validated @RequestPart("image") List<MultipartFile> files){
 		try {
 			if(userService.retrieve(userId).getId().equals(id)){
 				User originUser = userService.retrieve(userId);
@@ -199,8 +200,7 @@ public class UserController {
 	public ResponseEntity<?> deleteUser(@AuthenticationPrincipal String userId, @PathVariable("id") String id, @RequestBody UserDTO userDTO){
 		try {
 			User user = userService.retrieve(userId);
-			UserDTO dto = userDTO;
-			if(user.getId().equals(id) && passwordEncoder.matches(dto.getUserPassword(), user.getUserPassword())){
+			if(user.getId().equals(id) && passwordEncoder.matches(userDTO.getUserPassword(), user.getUserPassword())){
 				userService.delete(user);
 				File file = new File(user.getUserImage().getStoredFileName());
 				file.delete();

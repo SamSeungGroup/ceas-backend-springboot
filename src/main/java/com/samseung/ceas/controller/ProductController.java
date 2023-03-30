@@ -48,12 +48,10 @@ public class ProductController {
             ResponseDtos<ProductDTO> response = ResponseDtos.<ProductDTO>builder().data(dtos).build();
             return ResponseEntity.ok().body(response);
         } catch (IllegalStateException e) {
-            ResponseDtos<ProductDTO> responseDtos = ResponseDtos.<ProductDTO>builder().error("Product Table is empty")
-                    .build();
+            ResponseDtos<ProductDTO> responseDtos = ResponseDtos.<ProductDTO>builder().error("Product Table is empty").build();
             return ResponseEntity.badRequest().body(responseDtos);
         } catch (Exception e) {
-            ResponseDtos<ProductDTO> response = ResponseDtos.<ProductDTO>builder().error("An unexpected error occurred")
-                    .build();
+            ResponseDtos<ProductDTO> response = ResponseDtos.<ProductDTO>builder().error("An unexpected error occurred").build();
             return ResponseEntity.badRequest().body(response);
         }
     }
@@ -113,21 +111,25 @@ public class ProductController {
                                            @Validated @RequestPart("image") List<MultipartFile> files) {
         try {
             Product product = productService.retrieve(id);
+            if (product.getSeller().getId().equals(userId)) {
+                Image image = imageService.findByProductId(id);
+                imageService.addProductImage(image, files, dto);
+                Image savedImage = imageService.findByProductId(product.getId());
 
-            Image image = imageService.findByProductId(id);
-            imageService.addProductImage(image, files, dto);
-            Image savedImage = imageService.findByProductId(product.getId());
+                product.setProductName(dto.getProductName());
+                product.setProductDescription(dto.getProductDescription());
+                product.setProductPrice(dto.getProductPrice());
+                product.setProductImage(savedImage);
 
-            product.setProductName(dto.getProductName());
-            product.setProductDescription(dto.getProductDescription());
-            product.setProductPrice(dto.getProductPrice());
-            product.setProductImage(savedImage);
+                Product updatedProduct = productService.update(product);
+                ProductDTO productDto = new ProductDTO(updatedProduct);
 
-            Product updatedProduct = productService.update(product);
-            ProductDTO productDto = new ProductDTO(updatedProduct);
-
-            ResponseDto<ProductDTO> response = ResponseDto.<ProductDTO>builder().data(productDto).build();
-            return ResponseEntity.ok().body(response);
+                ResponseDto<ProductDTO> response = ResponseDto.<ProductDTO>builder().data(productDto).build();
+                return ResponseEntity.ok().body(response);
+            } else {
+                ResponseDto responseDto = ResponseDto.builder().error("자신의 상품만 수정할 수 있습니다.").build();
+                return ResponseEntity.badRequest().body(responseDto);
+            }
         } catch (NoSuchElementException e) {
             ResponseDto<ProductDTO> response = ResponseDto.<ProductDTO>builder().error("Entity is not existed").build();
             return ResponseEntity.badRequest().body(response);
@@ -141,18 +143,23 @@ public class ProductController {
     public ResponseEntity<?> deleteProduct(@AuthenticationPrincipal String userId, @PathVariable("id") Long id) {
         try {
             Product product = productService.retrieve(id);
-            productService.delete(product);
-            File file = new File(product.getProductImage().getStoredFileName());
-            file.delete();
+            if (product.getSeller().getId().equals(userId)) {
+                productService.delete(product);
+                File file = new File(product.getProductImage().getStoredFileName());
+                file.delete();
 
-            RestTemplate restTemplate = new RestTemplate();
-            String flaskUrl = "http://localhost:5000/word-cloud/" + id;
-            restTemplate.delete(flaskUrl);
+                RestTemplate restTemplate = new RestTemplate();
+                String flaskUrl = "http://localhost:5000/word-cloud/" + id;
+                restTemplate.delete(flaskUrl);
 
-            List<Product> products = productService.retrieveAll();
-            List<ProductDTO> dtos = products.stream().map(ProductDTO::new).collect(Collectors.toList());
-            ResponseDtos<ProductDTO> response = ResponseDtos.<ProductDTO>builder().data(dtos).build();
-            return ResponseEntity.ok().body(response);
+                List<Product> products = productService.retrieveAll();
+                List<ProductDTO> dtos = products.stream().map(ProductDTO::new).collect(Collectors.toList());
+                ResponseDtos<ProductDTO> response = ResponseDtos.<ProductDTO>builder().data(dtos).build();
+                return ResponseEntity.ok().body(response);
+            } else {
+                ResponseDto responseDto = ResponseDto.builder().error("자신의 상품만 삭제할 수 있습니다.").build();
+                return ResponseEntity.badRequest().body(responseDto);
+            }
         } catch (Exception e) {
             ResponseDto<ProductDTO> response = ResponseDto.<ProductDTO>builder().error("An error occurred while deleting a product").build();
             return ResponseEntity.badRequest().body(response);

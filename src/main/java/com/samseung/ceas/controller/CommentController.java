@@ -24,10 +24,10 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 @RequestMapping("/products")
 public class CommentController {
-	@Autowired
-	private UserService userService;
-	@Autowired
-	private ProductService productService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ProductService productService;
     @Autowired
     private CommentService commentService;
 
@@ -53,10 +53,10 @@ public class CommentController {
         try {
             Comment comment = CommentDTO.toEntity(dto);
 
-			comment.setId(null);
-			comment.setCreatedDate(LocalDateTime.now());
-			comment.setWriter(userService.retrieve(userId));
-			comment.setProduct(productService.retrieve(productId));
+            comment.setId(null);
+            comment.setCreatedDate(LocalDateTime.now());
+            comment.setWriter(userService.retrieve(userId));
+            comment.setProduct(productService.retrieve(productId));
 
             Comment createdComment = commentService.create(comment);
 
@@ -70,7 +70,7 @@ public class CommentController {
             List<Comment> commentList = commentService.retrieveAll(productId);
             Double productPositive = commentList.stream().mapToDouble(Comment::getCommentPositive).average().orElse(0.0);
 
-            productPositive = Math.round(productPositive*1000D)/1000D;
+            productPositive = Math.round(productPositive * 1000D) / 1000D;
             product.setProductPositive(productPositive);
             productService.update(product);
 
@@ -87,27 +87,32 @@ public class CommentController {
     public ResponseEntity<?> updateComments(@AuthenticationPrincipal String userId, @PathVariable("product_id") Long productId, @PathVariable("id") Long id, @RequestBody CommentDTO dto) {
         try {
             Comment origin = commentService.retrieve(id);
-			origin.setContent(dto.getContent());
+            if (origin.getWriter().getId().equals(userId)) {
+                origin.setContent(dto.getContent());
 
-            Comment updatedComment = commentService.update(origin);
+                Comment updatedComment = commentService.update(origin);
 
-            RestTemplate restTemplate = new RestTemplate();
-            String flaskUrl = "http://localhost:5000/comment-positive/" + updatedComment.getId();
-            HashMap<String, Double> comment_positive = restTemplate.getForObject(flaskUrl, HashMap.class);
-            updatedComment.setCommentPositive(comment_positive.get("comment_positive"));
-            commentService.update(updatedComment);
+                RestTemplate restTemplate = new RestTemplate();
+                String flaskUrl = "http://localhost:5000/comment-positive/" + updatedComment.getId();
+                HashMap<String, Double> comment_positive = restTemplate.getForObject(flaskUrl, HashMap.class);
+                updatedComment.setCommentPositive(comment_positive.get("comment_positive"));
+                commentService.update(updatedComment);
 
-            Product product = productService.retrieve(productId);
-            List<Comment> commentList = commentService.retrieveAll(productId);
-            Double productPositive = commentList.stream().mapToDouble(Comment::getCommentPositive).average().orElse(0.0);
+                Product product = productService.retrieve(productId);
+                List<Comment> commentList = commentService.retrieveAll(productId);
+                Double productPositive = commentList.stream().mapToDouble(Comment::getCommentPositive).average().orElse(0.0);
 
-            productPositive = Math.round(productPositive*1000D)/1000D;
-            product.setProductPositive(productPositive);
-            productService.update(product);
+                productPositive = Math.round(productPositive * 1000D) / 1000D;
+                product.setProductPositive(productPositive);
+                productService.update(product);
 
-			CommentDTO commentDto = new CommentDTO(updatedComment);
-            ResponseDto<CommentDTO> response = ResponseDto.<CommentDTO>builder().data(commentDto).build();
-            return ResponseEntity.ok().body(response);
+                CommentDTO commentDto = new CommentDTO(updatedComment);
+                ResponseDto<CommentDTO> response = ResponseDto.<CommentDTO>builder().data(commentDto).build();
+                return ResponseEntity.ok().body(response);
+            } else {
+                ResponseDto responseDto = ResponseDto.builder().error("자신의 댓글만 수정할 수 있습니다.").build();
+                return ResponseEntity.badRequest().body(responseDto);
+            }
         } catch (NoSuchElementException e) {
             ResponseDto<CommentDTO> response = ResponseDto.<CommentDTO>builder().error("Entity is not existed").build();
             return ResponseEntity.badRequest().body(response);
@@ -121,20 +126,25 @@ public class CommentController {
     public ResponseEntity<?> deleteComments(@AuthenticationPrincipal String userId, @PathVariable("product_id") Long productId, @PathVariable("id") Long id) {
         try {
             Comment coment = commentService.retrieve(id);
-            commentService.delete(coment);
+            if (coment.getWriter().getId().equals(userId)) {
+                commentService.delete(coment);
 
-            Product product = productService.retrieve(productId);
-            List<Comment> commentList = commentService.retrieveAll(productId);
-            Double productPositive = commentList.stream().mapToDouble(Comment::getCommentPositive).average().orElse(0.0);
+                Product product = productService.retrieve(productId);
+                List<Comment> commentList = commentService.retrieveAll(productId);
+                Double productPositive = commentList.stream().mapToDouble(Comment::getCommentPositive).average().orElse(0.0);
 
-            productPositive = Math.round(productPositive*1000D)/1000D;
-            product.setProductPositive(productPositive);
-            productService.update(product);
+                productPositive = Math.round(productPositive * 1000D) / 1000D;
+                product.setProductPositive(productPositive);
+                productService.update(product);
 
-            List<Comment> comments = commentService.retrieveAll(productId);
-            List<CommentDTO> dtos = comments.stream().map(CommentDTO::new).collect(Collectors.toList());
-            ResponseDtos<CommentDTO> response = ResponseDtos.<CommentDTO>builder().data(dtos).build();
-            return ResponseEntity.ok().body(response);
+                List<Comment> comments = commentService.retrieveAll(productId);
+                List<CommentDTO> dtos = comments.stream().map(CommentDTO::new).collect(Collectors.toList());
+                ResponseDtos<CommentDTO> response = ResponseDtos.<CommentDTO>builder().data(dtos).build();
+                return ResponseEntity.ok().body(response);
+            } else {
+                ResponseDto responseDto = ResponseDto.builder().error("자신의 댓글만 삭제할 수 있습니다.").build();
+                return ResponseEntity.badRequest().body(responseDto);
+            }
         } catch (Exception e) {
             ResponseDtos<CommentDTO> response = ResponseDtos.<CommentDTO>builder().error("An error occurred while deleting a Comments").build();
             return ResponseEntity.badRequest().body(response);

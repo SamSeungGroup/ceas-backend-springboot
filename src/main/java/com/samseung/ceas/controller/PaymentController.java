@@ -54,10 +54,15 @@ public class PaymentController {
     @GetMapping("/products/{product_id}")
     public ResponseEntity<?> retrieveByProductId(@AuthenticationPrincipal String userId, @PathVariable Long product_id) {
         try {
-            List<Payment> paymentList = paymentService.retrieveByProductId(product_id);
-            List<PaymentDTO> dtos = paymentList.stream().map(PaymentDTO::new).collect(Collectors.toList());
-            ResponseDtos<PaymentDTO> response = ResponseDtos.<PaymentDTO>builder().data(dtos).build();
-            return ResponseEntity.ok().body(response);
+            if (productService.retrieve(product_id).getSeller().getId().equals(userId)) {
+                List<Payment> paymentList = paymentService.retrieveByProductId(product_id);
+                List<PaymentDTO> dtos = paymentList.stream().map(PaymentDTO::new).collect(Collectors.toList());
+                ResponseDtos<PaymentDTO> response = ResponseDtos.<PaymentDTO>builder().data(dtos).build();
+                return ResponseEntity.ok().body(response);
+            } else {
+                ResponseDto responseDto = ResponseDto.builder().error("자신이 등록한 상품 결제 정보만 조회할 수 있습니다.").build();
+                return ResponseEntity.badRequest().body(responseDto);
+            }
         } catch (Exception e) {
             ResponseDto response = ResponseDto.builder().error(e.getMessage()).build();
             return ResponseEntity.badRequest().body(response);
@@ -98,11 +103,16 @@ public class PaymentController {
     @GetMapping("/users/{user_id}")
     public ResponseEntity<?> retrieveByUserId(@AuthenticationPrincipal String userId, @PathVariable String user_id) {
         try {
-            List<Payment> paymentList = paymentService.retrieveByBuyerId(user_id);
-            List<PaymentDTO> dtos = paymentList.stream().map(PaymentDTO::new).collect(Collectors.toList());
+            if (userService.retrieve(userId).getId().equals(user_id)) {
+                List<Payment> paymentList = paymentService.retrieveByBuyerId(user_id);
+                List<PaymentDTO> dtos = paymentList.stream().map(PaymentDTO::new).collect(Collectors.toList());
 
-            ResponseDtos<PaymentDTO> response = ResponseDtos.<PaymentDTO>builder().data(dtos).build();
-            return ResponseEntity.ok().body(response);
+                ResponseDtos<PaymentDTO> response = ResponseDtos.<PaymentDTO>builder().data(dtos).build();
+                return ResponseEntity.ok().body(response);
+            } else {
+                ResponseDto responseDto = ResponseDto.builder().error("자신의 결제 정보만 조회할 수 있습니다.").build();
+                return ResponseEntity.badRequest().body(responseDto);
+            }
         } catch (Exception e) {
             ResponseDto response = ResponseDto.builder().error(e.getMessage()).build();
             return ResponseEntity.badRequest().body(response);
