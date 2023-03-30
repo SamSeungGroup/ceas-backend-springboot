@@ -27,11 +27,11 @@ public class PaymentDTO {
     private String status;
     private Boolean success;
     private Long productId;
-    private String buyerId;
+    private String sellerName;
+    private String buyerName;
     private Long canceledAmount;
     private Long canceledMilliseconds;
     private LocalDateTime canceledDate;
-    private Long totalPaidNumber;
 
     public PaymentDTO(Payment payment){
         this.id = payment.getId();
@@ -45,7 +45,8 @@ public class PaymentDTO {
         this.status = payment.getStatus();
         this.success = payment.getSuccess();
         this.productId = payment.getProduct().getId();
-        this.buyerId = payment.getBuyer().getId();
+        this.sellerName = payment.getProduct().getSeller().getUserName();
+        this.buyerName = payment.getBuyer().getUserName();
         this.canceledAmount = payment.getCanceledAmount();
         this.canceledDate = payment.getCanceledDate();
     }
