@@ -28,8 +28,7 @@ public class WebSecurityConfig{
 			.and()
 			.authorizeHttpRequests()
 			.requestMatchers("/", "/users", "/users/login").permitAll()
-			.requestMatchers(HttpMethod.GET, "/products/**", "/payments").permitAll()
-			.requestMatchers("/images/**").permitAll()
+			.requestMatchers(HttpMethod.GET, "/products/**", "/images/**", "/payments").permitAll()
 			.anyRequest().authenticated();
 		
 		http.addFilterAfter(jwtAuthenticationFilter, CorsFilter.class);
