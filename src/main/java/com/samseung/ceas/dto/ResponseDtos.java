@@ -14,4 +14,5 @@ import lombok.NoArgsConstructor;
 public class ResponseDtos<T> {
 	private String error;
 	private List<T> data;
+	private ResponseMessage code;
 }

@@ -1,5 +1,6 @@
 package com.samseung.ceas.controller;
 
+import com.samseung.ceas.dto.ResponseMessage;
 import com.samseung.ceas.dto.ResponseDto;
 import com.samseung.ceas.model.Image;
 import com.samseung.ceas.service.ImageService;
@@ -21,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
@@ -200,21 +200,33 @@ public class UserController {
 	public ResponseEntity<?> deleteUser(@AuthenticationPrincipal String userId, @PathVariable("id") String id, @RequestBody UserDTO userDTO){
 		try {
 			User user = userService.retrieve(userId);
-			if(user.getId().equals(id) && passwordEncoder.matches(userDTO.getUserPassword(), user.getUserPassword())){
-				userService.delete(user);
-				File file = new File(user.getUserImage().getStoredFileName());
-				file.delete();
-
-				List<User> entities =  userService.retrieveAll();
-				List<UserDTO> dtos = entities.stream().map(UserDTO::new).collect(Collectors.toList());
-				ResponseDtos<UserDTO> response = ResponseDtos.<UserDTO>builder().data(dtos).build();
-				return ResponseEntity.ok().body(response);
+			if(user.getId().equals(id)){
+				if(passwordEncoder.matches(userDTO.getUserPassword(), user.getUserPassword())){
+					userService.delete(user);
+					if(user.getUserImage() != null){
+						File file = new File(user.getUserImage().getStoredFileName());
+						file.delete();
+					}
+					ResponseDto<UserDTO> response = ResponseDto.<UserDTO>builder()
+							.code(ResponseMessage.SUCCESS)
+							.build();
+					return ResponseEntity.ok().body(response);
+				}else{
+					ResponseDto responseDto = ResponseDto.builder()
+							.code(ResponseMessage.FAIL)
+							.error("비밀번호가 틀립니다.")
+							.build();
+					return ResponseEntity.badRequest().body(responseDto);
+				}
 			}else {
-				ResponseDto responseDto = ResponseDto.builder().error("자신의 정보만 삭제할 수 있습니다.").build();
+				ResponseDto responseDto = ResponseDto.builder()
+						.code(ResponseMessage.FAIL)
+						.error("자신의 정보만 삭제할 수 있습니다.")
+						.build();
 				return ResponseEntity.badRequest().body(responseDto);
 			}
 		}catch (Exception e) {
-			ResponseDtos<UserDTO> response = ResponseDtos.<UserDTO>builder().error("An error occurred while deleting a product").build();
+			ResponseDtos<UserDTO> response = ResponseDtos.<UserDTO>builder().error(e.getMessage()).build();
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
