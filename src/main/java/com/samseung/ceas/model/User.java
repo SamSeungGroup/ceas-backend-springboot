@@ -43,6 +43,10 @@ public class User {
 	@OneToMany(mappedBy = "writer", cascade = CascadeType.REMOVE)
 	private List<Comment> commentList;
 
+	@JsonIgnore
+	@OneToMany(mappedBy = "buyer", cascade = CascadeType.REMOVE)
+	private List<Payment> paymentList;
+
 	@OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties({"user"})
 	private Image userImage;
