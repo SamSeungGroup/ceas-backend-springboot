@@ -216,7 +216,7 @@ public class UserController {
 							.code(ResponseMessage.FAIL)
 							.error("비밀번호가 틀립니다.")
 							.build();
-					return ResponseEntity.badRequest().body(responseDto);
+					return ResponseEntity.ok().body(responseDto);
 				}
 			}else {
 				ResponseDto responseDto = ResponseDto.builder()
